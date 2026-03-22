@@ -1,0 +1,2822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LifeOS — Your Complete Life System</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0F; --bg2:#0F0F18; --card:#15151E; --card2:#1C1C28;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#F0EEE8; --t2:#9896A4; --t3:#555368;
+  --gold:#D4A843; --gold2:#A87A28;
+  --gym:#FF6B47; --work:#4A9EFF; --study:#A855F7;
+  --health:#22C55E; --biz:#F59E0B; --mind:#06B6D4;
+  --sleep:#6366F1; --danger:#EF4444;
+  --r:14px; --r-sm:9px;
+  --sh:0 4px 24px rgba(0,0,0,0.5);
+  --sh2:0 12px 48px rgba(0,0,0,0.6);
+}
+/* ── THEMES ── */
+/* dark (default) — already in :root */
+[data-theme="obsidian"]{
+  --bg:#000000; --bg2:#0A0A0A; --card:#101010; --card2:#181818;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#E8E8E8; --t2:#888; --t3:#444;
+  --gold:#C8A84B; --gold2:#8A6A20;
+}
+[data-theme="midnight"]{
+  --bg:#0D0F1A; --bg2:#111320; --card:#161828; --card2:#1E2035;
+  --border:rgba(100,120,255,0.1); --border2:rgba(100,120,255,0.18);
+  --text:#E4E6FF; --t2:#8B8FAA; --t3:#4A4E6A;
+  --gold:#7B8FFF; --gold2:#4A5FE0;
+}
+[data-theme="forest"]{
+  --bg:#0A0F0D; --bg2:#0F1610; --card:#141C16; --card2:#1B2620;
+  --border:rgba(80,180,100,0.1); --border2:rgba(80,180,100,0.18);
+  --text:#E2F0E5; --t2:#7AAA88; --t3:#3D6647;
+  --gold:#4DBF6A; --gold2:#2A8A45;
+}
+[data-theme="ember"]{
+  --bg:#0F0A08; --bg2:#160E0A; --card:#1C1210; --card2:#241816;
+  --border:rgba(220,90,50,0.1); --border2:rgba(220,90,50,0.18);
+  --text:#F5EAE4; --t2:#AA8070; --t3:#5A3A30;
+  --gold:#E85A30; --gold2:#B03A18;
+}
+[data-theme="arctic"]{
+  --bg:#F0F4F8; --bg2:#E8EDF4; --card:#FFFFFF; --card2:#F4F6FA;
+  --border:rgba(0,0,0,0.07); --border2:rgba(0,0,0,0.13);
+  --text:#1A2030; --t2:#5A6580; --t3:#9AA0B0;
+  --gold:#2563EB; --gold2:#1D4ED8;
+  --gym:#FF6B47; --work:#2563EB; --study:#7C3AED;
+  --health:#16A34A; --biz:#D97706; --mind:#0891B2;
+  --sleep:#4F46E5; --danger:#DC2626;
+}
+[data-theme="rose"]{
+  --bg:#0F080C; --bg2:#160C12; --card:#1C1018; --card2:#241620;
+  --border:rgba(220,80,140,0.1); --border2:rgba(220,80,140,0.18);
+  --text:#F5E4ED; --t2:#AA7090; --t3:#5A3050;
+  --gold:#E8509A; --gold2:#B02870;
+}
+[data-theme="slate"]{
+  --bg:#0C0E12; --bg2:#12151C; --card:#181C26; --card2:#1F2433;
+  --border:rgba(150,160,200,0.08); --border2:rgba(150,160,200,0.15);
+  --text:#CDD5E0; --t2:#7A8499; --t3:#454E60;
+  --gold:#94A3B8; --gold2:#64748B;
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 10% 0%,rgba(212,168,67,.05) 0%,transparent 55%),radial-gradient(ellipse 50% 60% at 90% 85%,rgba(74,158,255,.04) 0%,transparent 55%);pointer-events:none;z-index:0}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── PASSWORD FIELD WRAPPER ── */
+.pw-wrap{position:relative}
+.pw-wrap .finput{padding-right:42px}
+.pw-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);padding:4px;display:flex;align-items:center;justify-content:center;transition:color .2s}
+.pw-eye:hover{color:var(--text)}
+.pw-eye svg{width:16px;height:16px;pointer-events:none}
+
+/* ── PASSWORD STRENGTH ── */
+.pw-strength{display:flex;gap:4px;margin-top:6px}
+.ps-bar{flex:1;height:3px;border-radius:2px;background:var(--border2);transition:background .3s}
+.ps-bar.weak{background:#EF4444}
+.ps-bar.fair{background:#F59E0B}
+.ps-bar.good{background:#22C55E}
+.ps-bar.strong{background:#06B6D4}
+.pw-strength-lbl{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* ── FORGOT PASSWORD FORM ── */
+#af-forgot{display:none;flex-direction:column;gap:12px}
+#af-forgot.active{display:flex}
+.back-link{font-size:12.5px;color:var(--gold);cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;text-align:left;padding:0;transition:opacity .2s}
+.back-link:hover{opacity:.75}
+.a-divider{text-align:center;font-size:11.5px;color:var(--t3);padding:4px 0;position:relative}
+.a-divider::before{content:'';position:absolute;left:0;top:50%;width:calc(50% - 20px);height:1px;background:var(--border)}
+.a-divider::after{content:'';position:absolute;right:0;top:50%;width:calc(50% - 20px);height:1px;background:var(--border)}
+
+/* ── PROFILE CARD (signed-in state) ── */
+.profile-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.profile-avatar-big{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#000;margin:0 auto 10px}
+.profile-name{font-size:15px;font-weight:600;color:var(--text);text-align:center}
+.profile-email{font-size:12px;color:var(--t3);text-align:center;margin-top:3px}
+.profile-phone{font-size:12px;color:var(--t2);text-align:center;margin-top:2px}
+.profile-edit-btn{width:100%;margin-top:12px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s}
+.profile-edit-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+
+/* ── ROUTINE EDITOR ── */
+#page-routines .routine-block{background:var(--card2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.rb-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;transition:background .18s}
+.rb-header:hover{background:rgba(255,255,255,.03)}
+.rb-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.rb-title{font-size:14px;font-weight:600;color:var(--text);flex:1}
+.rb-time{font-size:12px;color:var(--t3);font-family:'JetBrains Mono',monospace}
+.rb-chevron{color:var(--t3);transition:transform .25s;font-size:12px}
+.rb-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.rb-body.open{display:block}
+.rb-step{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.rb-step:last-child{border:none}
+.rb-step-num{width:22px;height:22px;border-radius:50%;background:var(--card);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t2);flex-shrink:0}
+.rb-step-txt{flex:1;font-size:13px;color:var(--text)}
+.rb-step-dur{font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace}
+.rb-step-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px;transition:all .15s}
+.rb-step-del:hover{background:rgba(239,68,68,.15);color:var(--danger)}
+.rb-add-step{width:100%;margin-top:10px;padding:8px;background:rgba(255,255,255,.03);border:1px dashed var(--border2);border-radius:8px;color:var(--t3);font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s}
+.rb-add-step:hover{background:rgba(255,255,255,.06);color:var(--text);border-color:var(--gold)}
+
+/* THEME BUTTON in sidebar */
+.theme-btn{width:100%;display:flex;align-items:center;gap:12px;padding:10px 22px;border:none;background:none;color:var(--t3);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;white-space:nowrap;transition:all .2s}
+.theme-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.theme-icon{width:19px;height:19px;flex-shrink:0}
+
+/* THEME PANEL */
+#theme-panel{position:fixed;left:68px;bottom:110px;z-index:500;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:18px 16px;width:264px;box-shadow:0 12px 48px rgba(0,0,0,.6);display:none;transition:background .3s}
+#theme-panel.open{display:block;animation:tpIn .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes tpIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.tp-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.theme-swatch{border:1.5px solid var(--border);border-radius:10px;padding:9px 11px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;background:transparent;font-family:'DM Sans',sans-serif}
+.theme-swatch:hover{border-color:var(--border2);background:rgba(255,255,255,.03)}
+.theme-swatch.active{border-color:var(--gold)}
+.swatch-dot{width:20px;height:20px;border-radius:5px;flex-shrink:0}
+.swatch-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap}
+
+/* SIDEBAR */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:64px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:flex-start;padding:16px 0;z-index:200;transition:width .3s cubic-bezier(.34,1.56,.64,1);overflow:hidden}
+#sidebar:hover{width:210px}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:4px 12px 20px;flex-shrink:0;width:210px}
+.sb-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 12px rgba(212,168,67,.3)}
+.sb-logo-icon svg{width:18px;height:18px;color:#000}
+.sb-logo-text{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);white-space:nowrap;opacity:0;transition:opacity .2s}
+#sidebar:hover .sb-logo-text{opacity:1}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:10px 22px;border:none;background:none;color:var(--t3);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;text-align:left;white-space:nowrap;transition:all .2s;position:relative}
+.nav-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-btn.active{color:var(--gold);background:rgba(212,168,67,.09)}
+.nav-btn.active::before{content:'';position:absolute;left:0;top:20%;height:60%;width:3px;background:var(--gold);border-radius:0 3px 3px 0}
+.nav-icon{width:19px;height:19px;flex-shrink:0}
+.nav-lbl{opacity:0;transition:opacity .18s .05s;white-space:nowrap}
+#sidebar:hover .nav-lbl{opacity:1}
+.sb-bottom{margin-top:auto;width:100%;border-top:1px solid var(--border);padding-top:8px}
+.user-btn{display:flex;align-items:center;gap:10px;padding:10px 22px;cursor:pointer;color:var(--t2);width:100%;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:13px;white-space:nowrap;transition:all .2s}
+.user-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.u-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000;flex-shrink:0}
+.u-label{opacity:0;transition:opacity .18s .05s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+#sidebar:hover .u-label{opacity:1}
+
+/* MAIN */
+#main{margin-left:64px;position:relative;z-index:1}
+.page{display:none;padding:28px 32px 100px;min-height:100vh;animation:pgIn .35s ease}
+.page.active{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
+.pg-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.5px}
+.pg-sub{font-size:13px;color:var(--t3);margin-top:3px}
+.tb-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:var(--r-sm);border:none;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--t2);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:600;box-shadow:0 3px 14px rgba(212,168,67,.3)}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 5px 20px rgba(212,168,67,.4)}
+.btn-gold:active{transform:scale(.97)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-danger{background:rgba(239,68,68,.12);color:var(--danger);border:1px solid rgba(239,68,68,.25)}
+.btn-danger:hover{background:rgba(239,68,68,.2)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.span2{grid-column:span 2}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 50%);pointer-events:none;border-radius:var(--r)}
+.card-sm{padding:16px 18px}
+.c-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.c-sub{font-size:12px;color:var(--t3)}
+
+/* STAT CARDS */
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:6px;transition:all .2s}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--sh)}
+.s-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.s-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;line-height:1}
+.s-lbl{font-size:11.5px;color:var(--t3)}
+.s-chg{font-size:11px;font-weight:500;color:var(--health)}
+
+/* CLOCK HERO */
+.clock-hero{display:flex;align-items:center;gap:36px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;margin-bottom:22px;flex-wrap:wrap}
+.clock-wrap{position:relative;width:200px;height:200px;flex-shrink:0}
+#pie-canvas,#clock-face{position:absolute;top:0;left:0;width:200px;height:200px}
+.digital-block{flex:1;min-width:220px}
+.dg-greeting{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px}
+.dg-time{font-family:'JetBrains Mono',monospace;font-size:clamp(42px,5vw,68px);font-weight:500;letter-spacing:-2px;line-height:1}
+.dg-time .colon{color:var(--gold);animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:.15}}
+.dg-date{font-size:13px;color:var(--t2);margin-top:5px}
+.clock-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* TASK ITEMS */
+.t-item{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:7px;transition:all .2s;animation:tIn .3s ease}
+@keyframes tIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.t-item:hover{border-color:var(--border2)}
+.t-item:hover .t-del{opacity:1}
+.t-item.done{opacity:.45}
+.t-item.done .t-txt{text-decoration:line-through;color:var(--t3)}
+.t-cb{width:19px;height:19px;border-radius:5px;border:2px solid var(--border2);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .22s cubic-bezier(.34,1.56,.64,1)}
+.t-cb:hover{border-color:var(--gold)}
+.t-cb.chk{animation:cbB .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes cbB{0%{transform:scale(1)}45%{transform:scale(1.25)}100%{transform:scale(1)}}
+.t-cb svg{width:10px;height:10px;color:#fff;opacity:0;transform:scale(0);transition:all .16s}
+.t-cb.chk svg{opacity:1;transform:scale(1)}
+.t-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.t-txt{flex:1;font-size:13.5px;color:var(--text)}
+.t-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;flex-shrink:0}
+.t-del{width:26px;height:26px;border-radius:6px;border:none;background:transparent;color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .2s;flex-shrink:0}
+.t-del:hover{background:rgba(239,68,68,.15);color:var(--danger)}
+.t-del svg{width:12px;height:12px;pointer-events:none}
+.t-item.removing{animation:tOut .25s ease forwards}
+@keyframes tOut{to{opacity:0;transform:scale(.9) translateX(10px);max-height:0;padding:0;margin:0;border-width:0}}
+.empty-state{text-align:center;padding:32px 16px;color:var(--t3);font-size:13px}
+
+/* TABS */
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:6px 13px;border-radius:30px;border:1px solid var(--border);background:transparent;font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;color:var(--t3);cursor:pointer;transition:all .18s}
+.tab:hover{color:var(--text);border-color:var(--border2)}
+.tab.active{background:var(--gold);color:#000;border-color:transparent;font-weight:600}
+
+/* HABIT TRACKER */
+.h-row{margin-bottom:14px}
+.h-name{font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.h-streak{font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace}
+.h-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.h-cell{aspect-ratio:1;border-radius:4px;background:var(--card2);border:1px solid var(--border);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;position:relative}
+.h-cell:hover{border-color:var(--border2)}
+.h-cell.on{color:#fff;font-size:8px}
+.h-cell-day{position:absolute;bottom:1px;font-size:7px;color:var(--t3);pointer-events:none}
+.h-cell.on .h-cell-day{color:rgba(255,255,255,.5)}
+
+/* TIMER */
+.timer-disp{font-family:'JetBrains Mono',monospace;font-size:52px;font-weight:400;text-align:center;padding:24px 0;letter-spacing:-2px}
+.timer-ctrls{display:flex;gap:10px;justify-content:center}
+.t-btn{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s}
+.t-btn.play{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;box-shadow:0 3px 14px rgba(212,168,67,.3)}
+.t-btn.play:hover{transform:scale(1.08)}
+.t-btn.stp{background:rgba(239,68,68,.15);color:var(--danger)}
+.t-btn.rst{background:rgba(255,255,255,.06);color:var(--t2)}
+.timer-bar{height:4px;background:var(--card2);border-radius:2px;margin:0 0 18px;overflow:hidden}
+.timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;width:0%;transition:width .5s}
+.timer-modes{display:flex;gap:6px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.t-mode{padding:6px 13px;border-radius:30px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s}
+.t-mode.active{background:rgba(212,168,67,.15);border-color:rgba(212,168,67,.4);color:var(--gold)}
+
+/* MACROS */
+.mac-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.mac-name{font-size:12.5px;color:var(--t2);width:70px;flex-shrink:0}
+.mac-bar{flex:1;height:7px;background:var(--card2);border-radius:4px;overflow:hidden}
+.mac-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.mac-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);width:72px;text-align:right;flex-shrink:0}
+
+/* GOAL ITEMS */
+.g-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:7px;transition:all .2s;cursor:default}
+.g-item:hover{border-color:var(--border2)}
+.g-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.g-info{flex:1;min-width:0}
+.g-title{font-size:13.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.g-bar{height:3px;background:var(--card);border-radius:2px;margin-top:5px;overflow:hidden}
+.g-fill{height:100%;border-radius:2px;transition:width .5s}
+.g-pct{font-family:'JetBrains Mono',monospace;font-size:12px;flex-shrink:0}
+
+/* WATER CUPS */
+.water-cups{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.w-cup{width:34px;height:42px;border:2px solid var(--border2);border-radius:4px 4px 7px 7px;cursor:pointer;position:relative;overflow:hidden;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.w-cup.filled{border-color:var(--mind)}
+.w-cup-fill{position:absolute;bottom:0;left:0;right:0;top:0;background:linear-gradient(0deg,var(--mind),rgba(6,182,212,.35));transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.w-cup.filled .w-cup-fill{transform:scaleY(1)}
+.w-cup svg{width:14px;height:14px;color:var(--t3);position:relative;z-index:1;transition:color .2s}
+.w-cup.filled svg{color:#fff}
+
+/* FINANCE */
+.fin-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.fin-row:last-child{border:none}
+.fin-desc{font-size:13px;color:var(--text)}
+.fin-date{font-size:11px;color:var(--t3);margin-top:2px}
+.fin-amt{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:500}
+.fin-amt.in{color:var(--health)} .fin-amt.out{color:var(--danger)}
+
+/* NOTE AREA */
+.note-ta{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 14px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);resize:none;outline:none;line-height:1.6;transition:border-color .2s}
+.note-ta:focus{border-color:rgba(212,168,67,.4)}
+.note-ta::placeholder{color:var(--t3)}
+
+/* FIELDS */
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+.finput{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 13px;font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:all .2s}
+.finput:focus{border-color:rgba(212,168,67,.5);box-shadow:0 0 0 2px rgba(212,168,67,.1)}
+.finput::placeholder{color:var(--t3)}
+.finput option{background:var(--card)}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:480px;box-shadow:var(--sh2);transform:scale(.95) translateY(10px);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.overlay.open .modal{transform:scale(1) translateY(0)}
+.m-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.m-close{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;flex-shrink:0}
+.m-close:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.m-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+
+/* AUTH PANEL */
+.auth-slide{position:fixed;top:0;right:0;bottom:0;width:360px;background:var(--bg2);border-left:1px solid var(--border);z-index:600;transform:translateX(100%);transition:transform .38s cubic-bezier(.34,1.56,.64,1);padding:32px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:0}
+.auth-slide.open{transform:translateX(0)}
+.auth-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:599;display:none}
+.auth-overlay.open{display:block}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.auth-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:11px;display:flex;align-items:center;justify-content:center}
+.auth-logo-icon svg{width:18px;height:18px;color:#000}
+.auth-logo-text{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.auth-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s}
+.auth-close:hover{background:rgba(255,255,255,.09);color:var(--text)}
+.auth-tabs{display:flex;background:var(--card);border-radius:var(--r-sm);padding:3px;margin-bottom:22px;position:relative}
+.a-slider{position:absolute;top:3px;left:3px;height:calc(100% - 6px);width:calc(50% - 3px);background:var(--card2);border-radius:7px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.a-tab{flex:1;padding:8px;text-align:center;font-size:13.5px;font-weight:500;color:var(--t3);cursor:pointer;position:relative;z-index:1;border:none;background:none;font-family:'DM Sans',sans-serif;transition:color .2s}
+.a-tab.active{color:var(--text)}
+.a-form{display:none;flex-direction:column;gap:12px}
+.a-form.active{display:flex}
+.a-err{font-size:12.5px;color:var(--danger);background:rgba(239,68,68,.1);border-radius:7px;padding:9px 11px;display:none}
+.spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.signed-in-block{display:none;flex-direction:column;gap:12px;padding-top:16px;border-top:1px solid var(--border);margin-top:8px}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:30px;font-size:13.5px;font-weight:500;box-shadow:var(--sh);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* FAB */
+.fab{position:fixed;bottom:28px;right:28px;width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 24px rgba(212,168,67,.35);z-index:50;transition:all .3s cubic-bezier(.34,1.56,.64,1);color:#000}
+.fab:hover{transform:scale(1.08) translateY(-2px)}
+.fab:active{transform:scale(.95)}
+.fab.open svg{transform:rotate(45deg)}
+.fab svg{width:20px;height:20px;transition:transform .28s}
+
+/* QUOTE */
+.quote-box{background:linear-gradient(135deg,rgba(212,168,67,.08),rgba(212,168,67,.02));border:1px solid rgba(212,168,67,.18);border-radius:var(--r);padding:22px;text-align:center;margin-bottom:18px}
+.quote-text{font-family:'Syne',sans-serif;font-size:15px;font-weight:500;font-style:italic;line-height:1.55;margin-bottom:8px}
+.quote-by{font-size:12px;color:var(--gold)}
+
+/* AFFIRMATIONS */
+.aff-item{background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--r-sm);padding:11px 14px;font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:7px}
+
+/* ENERGY BTNS */
+.energy-grid{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.e-btn{width:34px;height:34px;border-radius:7px;border:1px solid var(--border);background:var(--card2);color:var(--t2);cursor:pointer;font-size:12.5px;font-weight:500;transition:all .15s;font-family:'DM Sans',sans-serif}
+.e-btn:hover{border-color:var(--border2);color:var(--text)}
+.e-btn.active{background:var(--gold);color:#000;border-color:transparent}
+
+/* READING */
+.read-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:6px}
+.read-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.read-title{font-size:13px;font-weight:500;color:var(--text)}
+.read-meta{font-size:11px;color:var(--t3);margin-top:1px}
+
+/* PROG RING */
+.prog-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.prog-ring-label{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.prl-pct{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+.prl-name{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px}
+
+/* ═══ MOBILE BOTTOM NAV ═══ */
+#mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:300;padding:0 0 env(safe-area-inset-bottom,0px);box-shadow:0 -4px 24px rgba(0,0,0,.4)}
+.mn-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.mn-scroll::-webkit-scrollbar{display:none}
+.mn-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:10px 6px 8px;flex:1;min-width:50px;border:none;background:none;color:var(--t3);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:500;transition:all .18s;-webkit-tap-highlight-color:transparent;position:relative}
+.mn-btn svg{width:20px;height:20px;transition:all .18s}
+.mn-btn.active{color:var(--gold)}
+.mn-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--gold);border-radius:0 0 3px 3px}
+/* More slide-up sheet */
+#mobile-more-menu{display:none;position:fixed;bottom:62px;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:299;padding:14px 12px;grid-template-columns:repeat(4,1fr);gap:8px;animation:moreIn .22s ease}
+@keyframes moreIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+#mobile-more-menu.open{display:grid}
+.mm-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:13px 6px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--t2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;transition:all .18s;-webkit-tap-highlight-color:transparent}
+.mm-btn:active{background:var(--card2);transform:scale(.97)}
+.mm-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,67,.08)}
+.mm-btn svg{width:20px;height:20px}
+/* Mobile top header */
+.mobile-topbar{display:none;position:sticky;top:0;background:rgba(10,10,15,.92);border-bottom:1px solid var(--border);z-index:150;padding:11px 16px;flex-direction:row;align-items:center;gap:12px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.mtb-logo{width:30px;height:30px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mtb-logo svg{width:15px;height:15px;color:#000}
+.mtb-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--text);flex:1}
+.mtb-user{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;cursor:pointer;border:none;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1080px){.page{padding:24px 24px 100px}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:960px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}.clock-hero{gap:20px;padding:20px}.dg-time{font-size:clamp(34px,5vw,54px)}}
+@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}.clock-hero{flex-direction:column}.digital-block{min-width:unset;width:100%}.span2{grid-column:span 1}#theme-panel{left:12px;right:12px;width:auto}}
+@media(max-width:600px){
+  #sidebar{display:none!important}
+  #mobile-nav{display:block}
+  .mobile-topbar{display:flex}
+  #main{margin-left:0;padding-top:0}
+  .page{padding:12px 14px 140px}
+  .fab{bottom:76px;right:14px;width:48px;height:48px;border-radius:13px}
+  .fab svg{width:18px;height:18px}
+  .g2,.g3,.g4{grid-template-columns:1fr!important}
+  .span2{grid-column:span 1!important}
+  #page-dashboard .g4{grid-template-columns:1fr 1fr!important}
+  .clock-hero{flex-direction:column;padding:16px;gap:14px;margin-bottom:14px}
+  .clock-wrap{width:150px;height:150px;margin:0 auto}
+  #pie-canvas,#clock-face{width:150px;height:150px}
+  .dg-time{font-size:42px;letter-spacing:-1.5px}
+  .dg-greeting{font-size:14px;margin-bottom:3px}
+  .dg-date{font-size:11.5px}
+  .clock-legend{gap:4px}
+  .leg{font-size:9.5px}
+  .topbar{flex-direction:column;gap:10px;margin-bottom:16px}
+  .tb-actions{width:100%;flex-wrap:wrap}
+  .tb-actions .btn{flex:1;min-width:calc(50% - 4px);justify-content:center}
+  .pg-title{font-size:19px}
+  .card{padding:14px}
+  .card-sm{padding:12px 13px}
+  .stat-card{padding:13px;flex-direction:row;align-items:center;gap:10px}
+  .s-val{font-size:20px}
+  .timer-disp{font-size:38px;padding:16px 0}
+  .t-btn{width:42px;height:42px;font-size:15px}
+  .overlay{align-items:flex-end;padding:0}
+  .modal{border-radius:20px 20px 0 0;max-width:100%;padding:22px 18px;max-height:90vh;overflow-y:auto}
+  .m-actions{flex-direction:column}
+  .m-actions .btn{width:100%;justify-content:center}
+  .auth-slide{width:100%;left:0}
+  .h-grid{gap:3px}
+  .h-name{font-size:12px}
+  .water-cups{gap:5px}
+  .w-cup{width:29px;height:35px}
+  .g-item{padding:10px 12px}
+  .g-title{font-size:13px}
+  .t-item{padding:10px 12px}
+  .t-txt{font-size:13px}
+  .t-badge{display:none}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0}
+  #theme-panel{left:0!important;right:0!important;bottom:62px!important;width:auto!important;border-radius:20px 20px 0 0;padding:18px 14px 20px;z-index:500!important}
+  .theme-grid{grid-template-columns:repeat(4,1fr);gap:5px}
+  .theme-swatch{flex-direction:column;padding:7px 4px;gap:4px}
+  .swatch-name{font-size:8.5px;text-align:center}
+  .swatch-dot{width:26px;height:26px;border-radius:7px}
+  .rb-header{padding:11px}
+  .rb-title{font-size:13px}
+  .mac-name{width:52px;font-size:11px}
+  .mac-val{width:55px;font-size:10px}
+  .quote-box{padding:14px}
+  .quote-text{font-size:13px}
+  .timer-modes{flex-wrap:wrap;gap:4px;margin-bottom:12px}
+  .t-mode{font-size:11px;padding:5px 10px}
+  .g3.g4{grid-template-columns:1fr 1fr!important}
+  #mobile-more-menu{padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+  .a-form{gap:10px}
+  .field{margin-bottom:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ MOBILE TOP BAR (shown only on phones) ═══ -->
+<header class="mobile-topbar" id="mobile-topbar">
+  <div class="mtb-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <span class="mtb-title" id="mtb-title">LifeOS</span>
+  <button class="mtb-user" id="mtb-user" onclick="openAuth()">?</button>
+</header>
+
+<!-- ═══ MOBILE BOTTOM NAV ═══ -->
+<nav id="mobile-nav">
+  <!-- More overlay -->
+  <div id="more-overlay" onclick="closeMobileMore()" style="display:none;position:fixed;inset:0;z-index:298;background:rgba(0,0,0,.5)"></div>
+  <!-- More menu -->
+  <div id="mobile-more-menu">
+    <button class="mm-btn" data-page="study" onclick="mobileNavTo('study',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>Study
+    </button>
+    <button class="mm-btn" data-page="health" onclick="mobileNavTo('health',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Health
+    </button>
+    <button class="mm-btn" data-page="mindset" onclick="mobileNavTo('mindset',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>Mindset
+    </button>
+    <button class="mm-btn" data-page="goals" onclick="mobileNavTo('goals',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Goals
+    </button>
+    <button class="mm-btn" data-page="habits" onclick="mobileNavTo('habits',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Habits
+    </button>
+    <button class="mm-btn" data-page="business" onclick="mobileNavTo('business',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Business
+    </button>
+    <button class="mm-btn" data-page="routines" onclick="mobileNavTo('routines',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Routines
+    </button>
+    <button class="mm-btn" onclick="toggleThemePanel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>Theme
+    </button>
+  </div>
+  <div class="mn-scroll">
+    <button class="mn-btn active" id="mn-dashboard" data-page="dashboard" onclick="mobileNavTo('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Home
+    </button>
+    <button class="mn-btn" id="mn-gym" data-page="gym" onclick="mobileNavTo('gym',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
+      Gym
+    </button>
+    <button class="mn-btn" id="mn-work" data-page="work" onclick="mobileNavTo('work',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/></svg>
+      Work
+    </button>
+    <button class="mn-btn" id="mn-add" onclick="fabClick()" style="color:var(--gold)">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(212,168,67,.4);margin-bottom:-4px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" style="width:18px;height:18px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      Add
+    </button>
+    <button class="mn-btn" id="mn-profile" onclick="openAuth()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+    <button class="mn-btn" id="mn-more" onclick="toggleMobileMore(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      More
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ SIDEBAR ═══ -->
+<nav id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <span class="sb-logo-text">LifeOS</span>
+  </div>
+
+  <button class="nav-btn active" data-page="dashboard" onclick="navTo('dashboard',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    <span class="nav-lbl">Dashboard</span>
+  </button>
+  <button class="nav-btn" data-page="gym" onclick="navTo('gym',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
+    <span class="nav-lbl">Gym & Fitness</span>
+  </button>
+  <button class="nav-btn" data-page="work" onclick="navTo('work',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/></svg>
+    <span class="nav-lbl">Work & Career</span>
+  </button>
+  <button class="nav-btn" data-page="study" onclick="navTo('study',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="nav-lbl">Study & Learning</span>
+  </button>
+  <button class="nav-btn" data-page="health" onclick="navTo('health',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <span class="nav-lbl">Health & Nutrition</span>
+  </button>
+  <button class="nav-btn" data-page="business" onclick="navTo('business',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    <span class="nav-lbl">Business & Money</span>
+  </button>
+  <button class="nav-btn" data-page="mindset" onclick="navTo('mindset',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    <span class="nav-lbl">Mindset & Growth</span>
+  </button>
+  <button class="nav-btn" data-page="habits" onclick="navTo('habits',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <span class="nav-lbl">Habits</span>
+  </button>
+  <button class="nav-btn" data-page="goals" onclick="navTo('goals',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+    <span class="nav-lbl">Goals</span>
+  </button>
+  <button class="nav-btn" data-page="routines" onclick="navTo('routines',this)">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+    <span class="nav-lbl">Routine Editor</span>
+  </button>
+
+  <div class="sb-bottom">
+    <button class="theme-btn" onclick="toggleThemePanel()">
+      <svg class="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <span class="nav-lbl">Theme</span>
+    </button>
+    <button class="user-btn" id="user-btn" onclick="openAuth()">
+      <div class="u-avatar" id="u-av">?</div>
+      <span class="u-label" id="u-lbl">Sign In</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ THEME PANEL ═══ -->
+<div id="theme-panel">
+  <div class="tp-title">🎨 Choose Theme</div>
+  <div class="theme-grid" id="theme-grid">
+    <button class="theme-swatch active" data-theme="dark" onclick="applyTheme('dark',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0A0A0F,#D4A843)"></div>
+      <span class="swatch-name">Dark Gold</span>
+    </button>
+    <button class="theme-swatch" data-theme="obsidian" onclick="applyTheme('obsidian',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#000,#C8A84B)"></div>
+      <span class="swatch-name">Obsidian</span>
+    </button>
+    <button class="theme-swatch" data-theme="midnight" onclick="applyTheme('midnight',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0D0F1A,#7B8FFF)"></div>
+      <span class="swatch-name">Midnight</span>
+    </button>
+    <button class="theme-swatch" data-theme="forest" onclick="applyTheme('forest',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0A0F0D,#4DBF6A)"></div>
+      <span class="swatch-name">Forest</span>
+    </button>
+    <button class="theme-swatch" data-theme="ember" onclick="applyTheme('ember',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0F0A08,#E85A30)"></div>
+      <span class="swatch-name">Ember</span>
+    </button>
+    <button class="theme-swatch" data-theme="rose" onclick="applyTheme('rose',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0F080C,#E8509A)"></div>
+      <span class="swatch-name">Rose</span>
+    </button>
+    <button class="theme-swatch" data-theme="arctic" onclick="applyTheme('arctic',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#F0F4F8,#2563EB)"></div>
+      <span class="swatch-name">Arctic ☀️</span>
+    </button>
+    <button class="theme-swatch" data-theme="slate" onclick="applyTheme('slate',this)">
+      <div class="swatch-dot" style="background:linear-gradient(135deg,#0C0E12,#94A3B8)"></div>
+      <span class="swatch-name">Slate</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+<!-- ─── DASHBOARD ─── -->
+<div class="page active" id="page-dashboard">
+  <div class="topbar">
+    <div>
+      <div class="pg-title" id="dash-title">Good morning ✦</div>
+      <div class="pg-sub">Your life at a glance — <span id="dash-date"></span></div>
+    </div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('general')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Task
+      </button>
+    </div>
+  </div>
+
+  <!-- Clock Hero -->
+  <div class="clock-hero">
+    <div class="clock-wrap">
+      <canvas id="pie-canvas" width="200" height="200"></canvas>
+      <canvas id="clock-face" width="200" height="200"></canvas>
+    </div>
+    <div class="digital-block">
+      <div class="dg-greeting" id="dg-greeting">Rise & Conquer</div>
+      <div class="dg-time">
+        <span id="dh">00</span><span class="colon">:</span><span id="dm">00</span><span class="colon">:</span><span id="ds">00</span>
+      </div>
+      <div class="dg-date" id="dg-date">—</div>
+      <div class="clock-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--sleep)"></div>Sleep</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--health)"></div>Morning</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--gym)"></div>Gym</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--work)"></div>Work</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--study)"></div>Study</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--biz)"></div>Business</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--mind)"></div>Mind</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="g4" style="margin-bottom:18px">
+    <div class="stat-card">
+      <div class="s-icon" style="background:rgba(255,107,71,.12)">🏋️</div>
+      <div class="s-val" id="st-gym">0</div>
+      <div class="s-lbl">Gym Tasks Done</div>
+      <div class="s-chg" id="st-gym-s">🔥 0 day streak</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon" style="background:rgba(74,158,255,.12)">💼</div>
+      <div class="s-val" id="st-work">0</div>
+      <div class="s-lbl">Work Tasks Done</div>
+      <div class="s-chg" id="st-focus">⏱ 0h focused</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon" style="background:rgba(168,85,247,.12)">📚</div>
+      <div class="s-val" id="st-study">0</div>
+      <div class="s-lbl">Study Tasks Done</div>
+      <div class="s-chg" id="st-study-s">📖 0 topics</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-icon" style="background:rgba(34,197,94,.12)">❤️</div>
+      <div class="s-val" id="st-health">—</div>
+      <div class="s-lbl">Health Score</div>
+      <div class="s-chg">💧 <span id="st-water">0</span>/8 glasses</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- Left col -->
+    <div>
+      <div class="quote-box" id="quote-box">
+        <div class="quote-text" id="quote-text">"The secret of getting ahead is getting started."</div>
+        <div class="quote-by" id="quote-by">— Mark Twain</div>
+      </div>
+      <div class="card card-sm" style="margin-bottom:18px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <div class="c-title">💧 Water Intake</div>
+          <span id="water-lbl" style="font-size:11.5px;color:var(--mind);font-family:'JetBrains Mono',monospace">0/8</span>
+        </div>
+        <div class="c-sub" style="margin-bottom:8px">Click a cup to log</div>
+        <div class="water-cups" id="water-cups"></div>
+      </div>
+      <div class="card card-sm">
+        <div class="c-title" style="margin-bottom:12px">🎯 Active Goals</div>
+        <div id="dash-goals"></div>
+        <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:6px" onclick="navTo('goals',document.querySelector('[data-page=goals]'))">View All Goals →</button>
+      </div>
+    </div>
+    <!-- Right col -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="c-title">📋 Today's Priority Tasks</div>
+        <span id="dash-done" style="font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace">0 / 0</span>
+      </div>
+      <div id="dash-tasks" style="max-height:340px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── GYM ─── -->
+<div class="page" id="page-gym">
+  <div class="topbar">
+    <div><div class="pg-title">🏋️ Gym & Fitness</div><div class="pg-sub">Build the body. Build the discipline.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('gym')">+ Add Exercise</button>
+      <button class="btn btn-gold" onclick="startWorkout()">▶ Start Workout</button>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:18px">
+    <div class="card">
+      <div class="c-title" style="margin-bottom:4px">⏱ Workout Timer</div>
+      <div class="timer-modes" id="gym-timer-modes">
+        <button class="t-mode active" data-secs="0" data-mode="sw" onclick="setTimer(this,'gym')">Stopwatch</button>
+        <button class="t-mode" data-secs="60" data-mode="cd" onclick="setTimer(this,'gym')">Rest 60s</button>
+        <button class="t-mode" data-secs="20" data-mode="cd" onclick="setTimer(this,'gym')">Tabata 20s</button>
+        <button class="t-mode" data-secs="180" data-mode="cd" onclick="setTimer(this,'gym')">Rest 3m</button>
+      </div>
+      <div class="timer-bar"><div class="timer-bar-fill" id="gym-bar"></div></div>
+      <div class="timer-disp" id="gym-timer">00:00</div>
+      <div class="timer-ctrls">
+        <button class="t-btn rst" onclick="resetTimerGym()">↺</button>
+        <button class="t-btn play" id="gym-play" onclick="toggleTimerGym()">▶</button>
+        <button class="t-btn stp" onclick="stopTimerGym()">■</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="c-title" style="margin-bottom:16px">📊 This Week's Stats</div>
+      <div class="g2" style="gap:10px">
+        <div style="text-align:center;background:var(--card2);border-radius:var(--r-sm);padding:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--gym)" id="gym-sess">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:3px">Sessions</div>
+        </div>
+        <div style="text-align:center;background:var(--card2);border-radius:var(--r-sm);padding:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--gold)" id="gym-mins">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:3px">Minutes</div>
+        </div>
+        <div style="text-align:center;background:var(--card2);border-radius:var(--r-sm);padding:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--health)" id="gym-cal">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:3px">Est. Calories</div>
+        </div>
+        <div style="text-align:center;background:var(--card2);border-radius:var(--r-sm);padding:14px">
+          <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--study)" id="gym-streak">0</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:3px">Day Streak 🔥</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="c-title">Today's Exercises</div>
+        <div class="tabs" style="margin:0;gap:4px">
+          <button class="tab active btn-sm" onclick="filterCat(this,'gym-task-list','gym','all')">All</button>
+          <button class="tab btn-sm" onclick="filterCat(this,'gym-task-list','gym','push')">Push</button>
+          <button class="tab btn-sm" onclick="filterCat(this,'gym-task-list','gym','pull')">Pull</button>
+          <button class="tab btn-sm" onclick="filterCat(this,'gym-task-list','gym','legs')">Legs</button>
+          <button class="tab btn-sm" onclick="filterCat(this,'gym-task-list','gym','cardio')">Cardio</button>
+        </div>
+      </div>
+      <div id="gym-task-list"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:10px">📝 Session Notes</div>
+        <textarea class="note-ta" id="gym-notes" rows="4" placeholder="PRs, sets, how you felt..."></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          <div class="field" style="margin:0"><label>Weight (kg)</label><input class="finput" id="bw" type="number" placeholder="75"></div>
+          <div class="field" style="margin:0"><label>Body Fat %</label><input class="finput" id="bf" type="number" placeholder="15"></div>
+        </div>
+        <button class="btn btn-gold" style="width:100%;margin-top:10px" onclick="saveNote('gym')">Save Session</button>
+      </div>
+      <div class="card">
+        <div class="c-title" style="margin-bottom:12px">🥗 Pre/Post Workout</div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(255,107,71,.12)">🍌</div><div><div class="read-title">Pre-workout meal 1–2h before</div><div class="read-meta">Carbs + protein for energy</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(34,197,94,.12)">🥩</div><div><div class="read-title">Post-workout within 45 min</div><div class="read-meta">Protein to rebuild muscle</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(6,182,212,.12)">💧</div><div><div class="read-title">Hydrate throughout workout</div><div class="read-meta">500ml+ per session</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── WORK ─── -->
+<div class="page" id="page-work">
+  <div class="topbar">
+    <div><div class="pg-title">💼 Work & Career</div><div class="pg-sub">Deep work. Big results.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('work')">+ Add Task</button>
+      <button class="btn btn-gold" id="focus-btn" onclick="toggleFocus()">🎯 Focus Mode</button>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:18px">
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="work-done" style="color:var(--work);font-size:28px">0</div>
+      <div class="s-lbl">Tasks Completed</div>
+    </div>
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="focus-time" style="color:var(--gold);font-size:28px">0m</div>
+      <div class="s-lbl">Deep Focus Today</div>
+    </div>
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="pomo-sessions" style="color:var(--health);font-size:28px">0</div>
+      <div class="s-lbl">Pomodoros Done</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="c-title">📋 Task Board</div>
+        <div class="tabs" style="margin:0;gap:4px">
+          <button class="tab active btn-sm" onclick="filterPri(this,'work-task-list','work','all')">All</button>
+          <button class="tab btn-sm" onclick="filterPri(this,'work-task-list','work','high')">🔴 High</button>
+          <button class="tab btn-sm" onclick="filterPri(this,'work-task-list','work','medium')">🟡 Med</button>
+          <button class="tab btn-sm" onclick="filterPri(this,'work-task-list','work','low')">🟢 Low</button>
+        </div>
+      </div>
+      <div id="work-task-list"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:4px">🍅 Pomodoro Timer</div>
+        <div class="timer-modes" id="pomo-modes">
+          <button class="t-mode active" data-secs="1500" onclick="setPomoMode(this)">Work 25m</button>
+          <button class="t-mode" data-secs="300" onclick="setPomoMode(this)">Break 5m</button>
+          <button class="t-mode" data-secs="900" onclick="setPomoMode(this)">Long 15m</button>
+        </div>
+        <div class="timer-bar"><div class="timer-bar-fill" id="pomo-bar"></div></div>
+        <div class="timer-disp" id="pomo-disp">25:00</div>
+        <div class="timer-ctrls">
+          <button class="t-btn rst" onclick="resetPomo()">↺</button>
+          <button class="t-btn play" id="pomo-play" onclick="togglePomo()">▶</button>
+          <button class="t-btn stp" onclick="stopPomo()">■</button>
+        </div>
+        <div style="text-align:center;font-size:12px;color:var(--t3);margin-top:10px">Session <span id="pomo-count" style="color:var(--gold);font-weight:600">1</span> of 4 · Total focus: <span id="pomo-total-min" style="color:var(--text)">0m</span></div>
+      </div>
+      <div class="card">
+        <div class="c-title" style="margin-bottom:10px">📝 Notes & Ideas</div>
+        <textarea class="note-ta" id="work-notes" rows="5" placeholder="Meeting notes, ideas, decisions..."></textarea>
+        <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="saveNote('work')">Save Notes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── STUDY ─── -->
+<div class="page" id="page-study">
+  <div class="topbar">
+    <div><div class="pg-title">📚 Study & Learning</div><div class="pg-sub">Knowledge compounds. Keep going.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('study')">+ Add Topic</button>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:18px">
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="study-done" style="color:var(--study);font-size:28px">0</div>
+      <div class="s-lbl">Topics Done</div>
+    </div>
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="study-time-disp" style="color:var(--gold);font-size:28px">0m</div>
+      <div class="s-lbl">Study Time Today</div>
+    </div>
+    <div class="stat-card" style="text-align:center">
+      <div class="s-val" id="study-streak-disp" style="color:var(--health);font-size:28px">0</div>
+      <div class="s-lbl">Day Streak 🔥</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div class="c-title">📖 Study Tasks</div>
+      </div>
+      <div id="study-task-list"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:10px">🧠 Notes</div>
+        <textarea class="note-ta" id="study-notes" rows="5" placeholder="Key concepts, summaries, formulas..."></textarea>
+        <button class="btn btn-gold" style="width:100%;margin-top:8px" onclick="saveNote('study')">Save Notes</button>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="c-title">📚 Reading List</div>
+          <button class="btn btn-ghost btn-sm" onclick="addReading()">+ Add</button>
+        </div>
+        <div id="reading-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HEALTH ─── -->
+<div class="page" id="page-health">
+  <div class="topbar">
+    <div><div class="pg-title">❤️ Health & Nutrition</div><div class="pg-sub">Your body is your most valuable asset.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('health')">+ Add Item</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="stat-card"><div class="s-icon" style="background:rgba(239,68,68,.12)">🔥</div><div class="s-val" id="h-cal">0</div><div class="s-lbl">Calories Today</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(6,182,212,.12)">💧</div><div class="s-val" id="h-water">0/8</div><div class="s-lbl">Water Glasses</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(99,102,241,.12)">😴</div><div class="s-val" id="h-sleep">0h</div><div class="s-lbl">Sleep Last Night</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(34,197,94,.12)">🚶</div><div class="s-val" id="h-steps">0</div><div class="s-lbl">Steps Today</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="c-title" style="margin-bottom:16px">🥗 Macros Tracker</div>
+      <div class="mac-row"><div class="mac-name">Protein</div><div class="mac-bar"><div class="mac-fill" id="mp-fill" style="background:var(--gym)"></div></div><div class="mac-val"><span id="mp-v">0</span>/150g</div></div>
+      <div class="mac-row"><div class="mac-name">Carbs</div><div class="mac-bar"><div class="mac-fill" id="mc-fill" style="background:var(--study)"></div></div><div class="mac-val"><span id="mc-v">0</span>/200g</div></div>
+      <div class="mac-row"><div class="mac-name">Fats</div><div class="mac-bar"><div class="mac-fill" id="mf-fill" style="background:var(--gold)"></div></div><div class="mac-val"><span id="mf-v">0</span>/60g</div></div>
+      <div class="mac-row"><div class="mac-name">Fibre</div><div class="mac-bar"><div class="mac-fill" id="mfi-fill" style="background:var(--health)"></div></div><div class="mac-val"><span id="mfi-v">0</span>/30g</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+        <div class="field" style="margin:0"><label>Protein (g)</label><input class="finput" id="in-p" type="number" placeholder="0"></div>
+        <div class="field" style="margin:0"><label>Carbs (g)</label><input class="finput" id="in-c" type="number" placeholder="0"></div>
+        <div class="field" style="margin:0"><label>Fats (g)</label><input class="finput" id="in-f" type="number" placeholder="0"></div>
+        <div class="field" style="margin:0"><label>Fibre (g)</label><input class="finput" id="in-fi" type="number" placeholder="0"></div>
+      </div>
+      <button class="btn btn-gold" style="width:100%;margin-top:12px" onclick="logMacros()">Log Macros</button>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:14px">😴 Vitals Log</div>
+        <div class="g2" style="gap:8px;margin-bottom:12px">
+          <div class="field" style="margin:0"><label>Sleep (hrs)</label><input class="finput" id="in-sl" type="number" placeholder="8" step="0.5"></div>
+          <div class="field" style="margin:0"><label>Steps</label><input class="finput" id="in-st" type="number" placeholder="10000"></div>
+          <div class="field" style="margin:0"><label>Heart Rate</label><input class="finput" id="in-hr" type="number" placeholder="70"></div>
+          <div class="field" style="margin:0"><label>Mood (1–10)</label><input class="finput" id="in-md" type="number" placeholder="8" min="1" max="10"></div>
+        </div>
+        <button class="btn btn-gold" style="width:100%" onclick="logVitals()">Log Vitals</button>
+      </div>
+      <div class="card">
+        <div class="c-title" style="margin-bottom:12px">✅ Health Checklist</div>
+        <div id="health-task-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── BUSINESS ─── -->
+<div class="page" id="page-business">
+  <div class="topbar">
+    <div><div class="pg-title">💰 Business & Entrepreneur</div><div class="pg-sub">Build wealth. Create value. Own your future.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-ghost" onclick="openAddModal('business')">+ Add Task</button>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:18px">
+    <div class="stat-card"><div class="s-icon" style="background:rgba(34,197,94,.12)">💵</div><div class="s-val" id="biz-rev" style="color:var(--health)">$0</div><div class="s-lbl">Revenue</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(239,68,68,.12)">📉</div><div class="s-val" id="biz-exp" style="color:var(--danger)">$0</div><div class="s-lbl">Expenses</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(212,168,67,.12)">📈</div><div class="s-val" id="biz-profit" style="color:var(--gold)">$0</div><div class="s-lbl">Net Profit</div></div>
+    <div class="stat-card"><div class="s-icon" style="background:rgba(74,158,255,.12)">🎯</div><div class="s-val" id="biz-done">0</div><div class="s-lbl">Tasks Done</div></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:14px">🚀 Business Tasks</div>
+        <div id="biz-task-list"></div>
+      </div>
+      <div class="card">
+        <div class="c-title" style="margin-bottom:14px">💳 Finance Log</div>
+        <div id="fin-log" style="max-height:200px;overflow-y:auto"></div>
+        <div style="display:grid;grid-template-columns:1fr 90px 70px;gap:7px;margin-top:12px">
+          <input class="finput" id="fin-desc" placeholder="Description">
+          <input class="finput" id="fin-amt" type="number" placeholder="Amount">
+          <select class="finput" id="fin-type"><option value="income">💵 In</option><option value="expense">📤 Out</option></select>
+        </div>
+        <button class="btn btn-gold" style="width:100%;margin-top:9px" onclick="logFinance()">Log Transaction</button>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:18px">
+        <div class="c-title" style="margin-bottom:10px">💡 Ideas & Strategy</div>
+        <textarea class="note-ta" id="biz-notes" rows="5" placeholder="Business ideas, strategies, opportunities..."></textarea>
+        <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="saveNote('biz')">Save Ideas</button>
+      </div>
+      <div class="card">
+        <div class="c-title" style="margin-bottom:12px">📚 Essential Reading</div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(212,168,67,.12)">📖</div><div><div class="read-title">$100M Offers — Alex Hormozi</div><div class="read-meta">Business & Sales · Must read</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(74,158,255,.12)">📖</div><div><div class="read-title">Zero to One — Peter Thiel</div><div class="read-meta">Startups & Innovation</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(34,197,94,.12)">📖</div><div><div class="read-title">Rich Dad Poor Dad — Kiyosaki</div><div class="read-meta">Finance & Mindset</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(168,85,247,.12)">📖</div><div><div class="read-title">The Lean Startup — Ries</div><div class="read-meta">Product & Business Model</div></div></div>
+        <div class="read-item"><div class="read-icon" style="background:rgba(239,68,68,.12)">📖</div><div><div class="read-title">Never Split the Difference — Voss</div><div class="read-meta">Negotiation & Persuasion</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MINDSET ─── -->
+<div class="page" id="page-mindset">
+  <div class="topbar">
+    <div><div class="pg-title">🧠 Mindset & Growth</div><div class="pg-sub">Your thoughts create your world.</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:18px">
+    <div class="card">
+      <div class="c-title" style="margin-bottom:14px">✍️ Morning Journal</div>
+      <div class="c-sub" style="margin-bottom:8px">3 things I'm grateful for today</div>
+      <textarea class="note-ta" id="jn-grateful" rows="3" placeholder="1. I am grateful for...&#10;2. I am grateful for...&#10;3. I am grateful for..."></textarea>
+      <div class="c-sub" style="margin:10px 0 6px">Today's intention / affirmation</div>
+      <textarea class="note-ta" id="jn-intent" rows="2" placeholder="Today I choose to..."></textarea>
+      <div class="c-sub" style="margin:10px 0 6px">The ONE thing I must do today</div>
+      <input class="finput" id="jn-one" placeholder="My top priority is...">
+      <button class="btn btn-gold" style="width:100%;margin-top:11px" onclick="saveNote('journal')">Save Morning Journal</button>
+    </div>
+    <div class="card">
+      <div class="c-title" style="margin-bottom:14px">🌙 Evening Reflection</div>
+      <div class="c-sub" style="margin-bottom:6px">What went well today?</div>
+      <textarea class="note-ta" id="rf-well" rows="3" placeholder="Wins, progress, proud moments..."></textarea>
+      <div class="c-sub" style="margin:10px 0 6px">What can I improve tomorrow?</div>
+      <textarea class="note-ta" id="rf-improve" rows="3" placeholder="Lessons, adjustments..."></textarea>
+      <div class="c-sub" style="margin:10px 0 6px">Energy level today</div>
+      <div class="energy-grid" id="energy-grid"></div>
+      <button class="btn btn-ghost" style="width:100%;margin-top:11px" onclick="saveNote('reflect')">Save Reflection</button>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="c-title" style="margin-bottom:12px">💬 Daily Affirmations</div>
+      <div id="aff-list"></div>
+    </div>
+    <div class="card">
+      <div class="c-title" style="margin-bottom:12px">🎧 Growth Library</div>
+      <div class="read-item"><div class="read-icon" style="background:rgba(168,85,247,.12)">🎧</div><div><div class="read-title">The Psychology of Money</div><div class="read-meta">Audiobook · Morgan Housel</div></div></div>
+      <div class="read-item"><div class="read-icon" style="background:rgba(212,168,67,.12)">📖</div><div><div class="read-title">Atomic Habits</div><div class="read-meta">Book · James Clear</div></div></div>
+      <div class="read-item"><div class="read-icon" style="background:rgba(34,197,94,.12)">🎙️</div><div><div class="read-title">Huberman Lab Podcast</div><div class="read-meta">Podcast · Andrew Huberman</div></div></div>
+      <div class="read-item"><div class="read-icon" style="background:rgba(74,158,255,.12)">🎙️</div><div><div class="read-title">The Tim Ferriss Show</div><div class="read-meta">Podcast · Tim Ferriss</div></div></div>
+      <div class="read-item"><div class="read-icon" style="background:rgba(239,68,68,.12)">📖</div><div><div class="read-title">Can't Hurt Me — Goggins</div><div class="read-meta">Discipline & Mental Toughness</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HABITS ─── -->
+<div class="page" id="page-habits">
+  <div class="topbar">
+    <div><div class="pg-title">✅ Habit Tracker</div><div class="pg-sub">Small daily actions change everything.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-gold" onclick="openHabitModal()">+ New Habit</button>
+    </div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div class="c-title">Last 7 Days — <span id="habit-month"></span></div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap" id="habit-legend"></div>
+    </div>
+    <div id="habit-container"></div>
+  </div>
+</div>
+
+<!-- ─── GOALS ─── -->
+<div class="page" id="page-goals">
+  <div class="topbar">
+    <div><div class="pg-title">🎯 Goals</div><div class="pg-sub">Dream big. Plan smart. Execute daily.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-gold" onclick="openGoalModal()">+ New Goal</button>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:18px">
+    <div class="stat-card" style="text-align:center"><div class="s-val" id="goals-total" style="color:var(--gold);font-size:28px">0</div><div class="s-lbl">Active Goals</div></div>
+    <div class="stat-card" style="text-align:center"><div class="s-val" id="goals-done" style="color:var(--health);font-size:28px">0</div><div class="s-lbl">Completed</div></div>
+    <div class="stat-card" style="text-align:center"><div class="s-val" id="goals-avg" style="color:var(--study);font-size:28px">0%</div><div class="s-lbl">Avg Progress</div></div>
+  </div>
+  <div class="card">
+    <div class="tabs" id="goal-tabs" style="margin-bottom:18px">
+      <button class="tab active" onclick="filterGoals('all',this)">All</button>
+      <button class="tab" onclick="filterGoals('gym',this)">Gym</button>
+      <button class="tab" onclick="filterGoals('work',this)">Work</button>
+      <button class="tab" onclick="filterGoals('study',this)">Study</button>
+      <button class="tab" onclick="filterGoals('health',this)">Health</button>
+      <button class="tab" onclick="filterGoals('business',this)">Business</button>
+      <button class="tab" onclick="filterGoals('mindset',this)">Mindset</button>
+      <button class="tab" onclick="filterGoals('finance',this)">Finance</button>
+    </div>
+    <div id="goals-list"></div>
+  </div>
+</div>
+
+<!-- ─── ROUTINE EDITOR ─── -->
+<div class="page" id="page-routines">
+  <div class="topbar">
+    <div><div class="pg-title">⚡ Routine Editor</div><div class="pg-sub">Design your perfect daily schedule, step by step.</div></div>
+    <div class="tb-actions">
+      <button class="btn btn-gold" onclick="openNewRoutineModal()">+ New Routine</button>
+    </div>
+  </div>
+
+  <!-- Quick-start templates -->
+  <div class="g3" style="margin-bottom:22px">
+    <div class="card card-sm" style="cursor:pointer;border-color:rgba(255,107,71,.2)" onclick="addTemplateRoutine('morning')">
+      <div style="font-size:20px;margin-bottom:6px">🌅</div>
+      <div class="c-title">Morning Power Routine</div>
+      <div class="c-sub">5:30am · 90 min · 8 steps</div>
+      <div style="font-size:11px;color:var(--gym);margin-top:8px;font-weight:500">+ Add to my routines →</div>
+    </div>
+    <div class="card card-sm" style="cursor:pointer;border-color:rgba(74,158,255,.2)" onclick="addTemplateRoutine('work')">
+      <div style="font-size:20px;margin-bottom:6px">💼</div>
+      <div class="c-title">Deep Work Block</div>
+      <div class="c-sub">9:00am · 3 hours · 5 steps</div>
+      <div style="font-size:11px;color:var(--work);margin-top:8px;font-weight:500">+ Add to my routines →</div>
+    </div>
+    <div class="card card-sm" style="cursor:pointer;border-color:rgba(99,102,241,.2)" onclick="addTemplateRoutine('evening')">
+      <div style="font-size:20px;margin-bottom:6px">🌙</div>
+      <div class="c-title">Night Wind-Down</div>
+      <div class="c-sub">9:30pm · 60 min · 6 steps</div>
+      <div style="font-size:11px;color:var(--sleep);margin-top:8px;font-weight:500">+ Add to my routines →</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--t2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">My Routines</div>
+      <div id="routine-list"></div>
+    </div>
+    <div class="card">
+      <div class="c-title" style="margin-bottom:4px">📅 Today's Schedule</div>
+      <div class="c-sub" style="margin-bottom:14px">Your routines mapped to the clock</div>
+      <div id="today-schedule"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #main -->
+
+<!-- ═══ NEW ROUTINE MODAL ═══ -->
+<div class="overlay" id="routine-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="m-title">
+      <span id="routine-modal-title">New Routine</span>
+      <button class="m-close" onclick="closeRoutineModal()">✕</button>
+    </div>
+    <div class="g2" style="gap:10px">
+      <div class="field span2"><label>Routine Name *</label><input class="finput" id="rm-name" placeholder="e.g. Morning Power Routine"></div>
+      <div class="field" style="margin:0"><label>Start Time</label><input class="finput" id="rm-time" type="time" value="06:00"></div>
+      <div class="field" style="margin:0"><label>Duration (min)</label><input class="finput" id="rm-dur" type="number" placeholder="60" min="1"></div>
+      <div class="field span2"><label>Category / Color</label>
+        <select class="finput" id="rm-color">
+          <option value="#FF6B47">🟠 Gym / Morning</option>
+          <option value="#4A9EFF">🔵 Work / Career</option>
+          <option value="#A855F7">🟣 Study / Learning</option>
+          <option value="#22C55E">🟢 Health / Wellness</option>
+          <option value="#F59E0B">🟡 Business</option>
+          <option value="#06B6D4">🩵 Mindset / Mind</option>
+          <option value="#6366F1">💜 Sleep / Rest</option>
+          <option value="#D4A843">🥇 General</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-top:4px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Steps (optional)</div>
+      <div id="rm-steps-list"></div>
+      <button style="width:100%;padding:9px;background:rgba(255,255,255,.03);border:1px dashed var(--border2);border-radius:8px;color:var(--t3);font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--t3)'" onclick="addModalStep()">+ Add Step</button>
+    </div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeRoutineModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveRoutine()">Save Routine</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AUTH SLIDE PANEL ═══ -->
+<div class="auth-overlay" id="auth-overlay" onclick="closeAuth()"></div>
+<div class="auth-slide" id="auth-slide">
+  <button class="auth-close" onclick="closeAuth()">✕</button>
+  <div class="auth-logo">
+    <div class="auth-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+    <span class="auth-logo-text">LifeOS</span>
+  </div>
+
+  <!-- Tabs (hidden when signed in or on forgot screen) -->
+  <div class="auth-tabs" id="auth-tab-row">
+    <div class="a-slider" id="a-slider"></div>
+    <button class="a-tab active" id="a-tab-in" onclick="switchAuth('in')">Sign In</button>
+    <button class="a-tab" id="a-tab-up" onclick="switchAuth('up')">Sign Up</button>
+  </div>
+
+  <!-- ── SIGN IN ── -->
+  <div class="a-form active" id="af-in">
+    <div class="field">
+      <label>Email</label>
+      <input class="finput" id="s-email" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input class="finput" id="s-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+        <button class="pw-eye" type="button" onclick="togglePw('s-pass',this)" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="a-err" id="s-err"></div>
+    <button class="btn btn-gold" id="s-btn" style="width:100%;padding:12px;justify-content:center" onclick="doSignIn()">Sign In</button>
+    <div class="a-divider">or</div>
+    <button class="back-link" style="text-align:center;width:100%" onclick="switchAuth('forgot')">Forgot password?</button>
+  </div>
+
+  <!-- ── SIGN UP ── -->
+  <div class="a-form" id="af-up">
+    <div class="g2" style="gap:10px">
+      <div class="field" style="margin:0">
+        <label>First Name</label>
+        <input class="finput" id="r-fname" type="text" placeholder="Alex" autocomplete="given-name">
+      </div>
+      <div class="field" style="margin:0">
+        <label>Last Name</label>
+        <input class="finput" id="r-lname" type="text" placeholder="Smith" autocomplete="family-name">
+      </div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input class="finput" id="r-email" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Phone (optional)</label>
+      <input class="finput" id="r-phone" type="tel" placeholder="+1 555 000 0000" autocomplete="tel">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <div class="pw-wrap">
+        <input class="finput" id="r-pass" type="password" placeholder="Min. 6 characters" autocomplete="new-password" oninput="checkPwStrength(this.value)">
+        <button class="pw-eye" type="button" onclick="togglePw('r-pass',this)" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="pw-strength" id="pw-strength-bars">
+        <div class="ps-bar" id="psb1"></div><div class="ps-bar" id="psb2"></div>
+        <div class="ps-bar" id="psb3"></div><div class="ps-bar" id="psb4"></div>
+      </div>
+      <div class="pw-strength-lbl" id="pw-strength-lbl"></div>
+    </div>
+    <div class="field">
+      <label>Confirm Password</label>
+      <div class="pw-wrap">
+        <input class="finput" id="r-confirm" type="password" placeholder="Repeat password" autocomplete="new-password" oninput="checkPwMatch()">
+        <button class="pw-eye" type="button" onclick="togglePw('r-confirm',this)" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div id="pw-match-msg" style="font-size:11px;margin-top:3px;display:none"></div>
+    </div>
+    <div class="a-err" id="r-err"></div>
+    <button class="btn btn-gold" id="r-btn" style="width:100%;padding:12px;justify-content:center" onclick="doSignUp()">Create Account</button>
+  </div>
+
+  <!-- ── FORGOT PASSWORD ── -->
+  <div class="a-form" id="af-forgot">
+    <button class="back-link" onclick="switchAuth('in')">← Back to Sign In</button>
+    <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin:4px 0 2px">Reset Password</div>
+    <div style="font-size:12.5px;color:var(--t3);margin-bottom:4px">Enter your email and we'll send you a reset link.</div>
+    <div class="field">
+      <label>Email</label>
+      <input class="finput" id="fp-email" type="email" placeholder="you@example.com" autocomplete="email">
+    </div>
+    <div class="a-err" id="fp-err"></div>
+    <div id="fp-success" style="font-size:13px;color:var(--health);background:rgba(34,197,94,.1);border-radius:8px;padding:10px 12px;display:none">✅ Reset email sent! Check your inbox.</div>
+    <button class="btn btn-gold" id="fp-btn" style="width:100%;padding:12px;justify-content:center" onclick="doForgotPw()">Send Reset Link</button>
+  </div>
+
+  <!-- ── SIGNED IN ── -->
+  <div class="signed-in-block" id="signed-in-block" style="display:none;flex-direction:column;gap:10px">
+    <div class="profile-card">
+      <div class="profile-avatar-big" id="si-avatar">?</div>
+      <div class="profile-name" id="si-name">—</div>
+      <div class="profile-email" id="si-email">—</div>
+      <div class="profile-phone" id="si-phone"></div>
+      <button class="profile-edit-btn" onclick="openEditProfile()">✏️ Edit Profile</button>
+    </div>
+    <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="doSignOut()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+  </div>
+</div>
+
+<!-- ═══ EDIT PROFILE MODAL ═══ -->
+<div class="overlay" id="edit-profile-modal">
+  <div class="modal">
+    <div class="m-title">
+      <span>Edit Profile</span>
+      <button class="m-close" onclick="closeEditProfile()">✕</button>
+    </div>
+    <div class="g2" style="gap:10px">
+      <div class="field" style="margin:0"><label>First Name</label><input class="finput" id="ep-fname" placeholder="Alex"></div>
+      <div class="field" style="margin:0"><label>Last Name</label><input class="finput" id="ep-lname" placeholder="Smith"></div>
+    </div>
+    <div class="field"><label>Phone</label><input class="finput" id="ep-phone" type="tel" placeholder="+1 555 000 0000"></div>
+    <div class="a-err" id="ep-err"></div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeEditProfile()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD TASK MODAL ═══ -->
+<div class="overlay" id="add-modal">
+  <div class="modal">
+    <div class="m-title">
+      <span id="modal-title-text">Add Task</span>
+      <button class="m-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="field"><label>Task / Item *</label><input class="finput" id="mt-text" placeholder="What needs to be done?" autocomplete="off"></div>
+    <div class="field"><label>Category</label>
+      <select class="finput" id="mt-cat">
+        <option value="gym">🏋️ Gym & Fitness</option>
+        <option value="work">💼 Work & Career</option>
+        <option value="study">📚 Study & Learning</option>
+        <option value="health">❤️ Health & Nutrition</option>
+        <option value="business">💰 Business</option>
+        <option value="mindset">🧠 Mindset</option>
+        <option value="general">⭐ General</option>
+      </select>
+    </div>
+    <div class="field"><label>Priority</label>
+      <select class="finput" id="mt-pri">
+        <option value="high">🔴 High Priority</option>
+        <option value="medium" selected>🟡 Medium Priority</option>
+        <option value="low">🟢 Low Priority</option>
+      </select>
+    </div>
+    <div class="field"><label>Notes (optional)</label><textarea class="finput" id="mt-notes" rows="2" placeholder="Any details..."></textarea></div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="submitTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GOAL MODAL ═══ -->
+<div class="overlay" id="goal-modal">
+  <div class="modal">
+    <div class="m-title">
+      <span>New Goal</span>
+      <button class="m-close" onclick="closeGoalModal()">✕</button>
+    </div>
+    <div class="field"><label>Goal Title *</label><input class="finput" id="g-title" placeholder="What do you want to achieve?"></div>
+    <div class="field"><label>Category</label>
+      <select class="finput" id="g-cat">
+        <option value="gym">🏋️ Gym & Fitness</option>
+        <option value="work">💼 Work & Career</option>
+        <option value="study">📚 Study & Learning</option>
+        <option value="health">❤️ Health</option>
+        <option value="business">💰 Business</option>
+        <option value="mindset">🧠 Mindset</option>
+        <option value="finance">💵 Finance</option>
+      </select>
+    </div>
+    <div class="field"><label>Deadline</label><input class="finput" id="g-deadline" type="date"></div>
+    <div class="field"><label>Current Progress (0–100%)</label><input class="finput" id="g-pct" type="number" placeholder="0" min="0" max="100"></div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeGoalModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="submitGoal()">Set Goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HABIT MODAL ═══ -->
+<div class="overlay" id="habit-modal">
+  <div class="modal">
+    <div class="m-title">
+      <span>New Habit</span>
+      <button class="m-close" onclick="closeHabitModal()">✕</button>
+    </div>
+    <div class="field"><label>Habit Name *</label><input class="finput" id="h-name" placeholder="e.g. Read 30 minutes"></div>
+    <div class="field"><label>Emoji Icon</label><input class="finput" id="h-emoji" placeholder="📖" maxlength="2"></div>
+    <div class="field"><label>Color</label>
+      <select class="finput" id="h-color">
+        <option value="#FF6B47">🟠 Orange (Gym)</option>
+        <option value="#4A9EFF">🔵 Blue (Work)</option>
+        <option value="#A855F7">🟣 Purple (Study)</option>
+        <option value="#22C55E">🟢 Green (Health)</option>
+        <option value="#F59E0B">🟡 Amber (Business)</option>
+        <option value="#06B6D4">🩵 Cyan (Mind)</option>
+        <option value="#D4A843">🥇 Gold</option>
+      </select>
+    </div>
+    <div class="m-actions">
+      <button class="btn btn-ghost" onclick="closeHabitModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="submitHabit()">Add Habit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ FAB ═══ -->
+<button class="fab" id="fab" onclick="fabClick()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+</button>
+
+<!-- ═══ FIREBASE + JS ═══ -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut,sendPasswordResetEmail,updateProfile}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getDatabase,ref,set,onValue,update,remove,push}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* ══════════════════════════════════════════════════════════════
+   LIFEOS v3.0 — FULL REAL-TIME FIREBASE ARCHITECTURE
+   ┌──────────────────────────────────────────────────────────┐
+   │  DataStore    — Single source of truth + dual persistence│
+   │  FB           — All reads/writes go through this layer   │
+   │  TaskEngine   — Recurring-aware task computation         │
+   │  RoutineEngine— Schedule-aware, log-tracked routines     │
+   │  StatsEngine  — Analytics from live DataStore            │
+   │  UIController — Runtime DOM injection (recurrence UI)    │
+   └──────────────────────────────────────────────────────────┘
+
+   REAL-TIME STRATEGY:
+   • Single onValue(users/uid) listener → keeps DB in sync
+   • Every mutation calls FB.write(path, val) immediately
+   • FB.write() → firebase set() + localStorage backup
+   • Offline fallback: mutations save to localStorage only
+   • On reconnect: Firebase listener re-syncs automatically
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Firebase init ── */
+const firebaseConfig={apiKey:"AIzaSyB8ebs6goMKE_HcKogQYXBqmb9v44SFh-A",authDomain:"wheather-station-c58ba.firebaseapp.com",databaseURL:"https://wheather-station-c58ba-default-rtdb.firebaseio.com",projectId:"wheather-station-c58ba",storageBucket:"wheather-station-c58ba.firebasestorage.app",messagingSenderId:"61375025732",appId:"1:61375025732:web:a74e5fcf0c78a0d8e12211"};
+const fbApp=initializeApp(firebaseConfig);
+const auth=getAuth(fbApp);
+const db=getDatabase(fbApp);
+
+/* ════════════════════════════════════════════════════════
+   FIREBASE LAYER (FB)
+   Central gateway for ALL reads and writes.
+   Every mutation in the app calls FB.write() — never
+   calls firebase directly. This ensures:
+     1. localStorage is always updated as backup
+     2. Firebase gets the write immediately when authed
+     3. Path-specific writes avoid overwriting siblings
+   ════════════════════════════════════════════════════════ */
+const FB = (() => {
+  let _uid = null;
+  let _listener = null;
+  const LS_KEY = 'lifeos_db_v3';
+
+  function setUid(uid) { _uid = uid; }
+  function getUid() { return _uid; }
+
+  /* Write a value to a specific Firebase path + localStorage backup.
+     path is relative to users/{uid}/ e.g. "tasks/t123" or "logs/2025-01-01/water" */
+  function write(path, val) {
+    _saveLs();
+    if (!_uid) return Promise.resolve();
+    return set(ref(db, `users/${_uid}/${path}`), val);
+  }
+
+  /* Remove a node */
+  function del(path) {
+    _saveLs();
+    if (!_uid) return Promise.resolve();
+    return remove(ref(db, `users/${_uid}/${path}`));
+  }
+
+  /* Update multiple keys under a path */
+  function patch(path, obj) {
+    _saveLs();
+    if (!_uid) return Promise.resolve();
+    return update(ref(db, `users/${_uid}/${path}`), obj);
+  }
+
+  /* Subscribe to the entire user document — single listener for all data */
+  function subscribe(onData) {
+    if (_listener) { _listener(); _listener = null; }
+    if (!_uid) return;
+    _listener = onValue(ref(db, `users/${_uid}`), snap => {
+      const d = snap.val() || {};
+      onData(d);
+    });
+  }
+
+  function unsubscribe() {
+    if (_listener) { _listener(); _listener = null; }
+  }
+
+  /* localStorage backup */
+  function _saveLs() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(DataStore.DB)); }
+    catch(e) { console.warn('[FB] localStorage write failed', e); }
+  }
+
+  function loadLs() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return null;
+      const p = JSON.parse(raw);
+      return (p && typeof p === 'object') ? p : null;
+    } catch(e) { return null; }
+  }
+
+  return { setUid, getUid, write, del, patch, loadLs };
+})();
+
+/* ════════════════════════════════════════════════════════
+   DATASTORE
+   In-memory DB — the single source of truth.
+   All modules read from here. Mutations write here
+   THEN call FB.write() for persistence.
+   ════════════════════════════════════════════════════════ */
+const DataStore = (() => {
+  /*
+    DB.tasks    { [id]: TaskDef }
+    DB.routines { [id]: RoutineDef }
+    DB.logs     { "YYYY-MM-DD": { tasks:{[id]:bool}, routines:{[id]:bool}, water:number } }
+    DB.goals    { [id]: GoalDef }
+    DB.habits   { [id]: { [date]: bool }, __custom: HabitDef[] }
+    DB.notes    { [key]: string }
+    DB.vitals   { sleep, steps, hr, mood, energy, water, macros, focusMins }
+    DB.finances { [id]: FinanceDef }
+    DB.profile  { firstName, lastName, phone, displayName, createdAt }
+    DB.settings { theme }
+
+    TaskDef:
+      text, cat, priority, notes, done(legacy), type, recurrence, createdAt, active
+
+    RoutineDef:
+      name, color, time, duration, steps, schedule, days, createdAt, active
+
+    Recurrence:
+      { freq: 'daily'|'weekly'|'interval', days?: number[], interval?: number }
+  */
+  let _db = {
+    tasks:{}, routines:{}, logs:{}, goals:{},
+    habits:{}, notes:{}, vitals:{}, finances:{},
+    profile:{}, settings:{}
+  };
+
+  const todayStr = () => new Date().toISOString().split('T')[0];
+
+  function getLog(dateKey) {
+    if (!_db.logs[dateKey]) _db.logs[dateKey] = { tasks:{}, routines:{}, water:0 };
+    return _db.logs[dateKey];
+  }
+
+  function initTodayLog() { return getLog(todayStr()); }
+
+  /* Merge a Firebase snapshot into the in-memory DB.
+     Preserves today's local log if Firebase doesn't have it yet
+     (handles offline-at-midnight). */
+  function syncFromSnapshot(d) {
+    d = d || {};
+    const todayKey = todayStr();
+    const localToday = _db.logs[todayKey]; // stash before overwrite
+
+    _db.tasks    = d.tasks    || {};
+    _db.goals    = d.goals    || {};
+    _db.habits   = d.habits   || {};
+    _db.notes    = d.notes    || {};
+    _db.vitals   = d.vitals   || {};
+    _db.finances = d.finances || {};
+    _db.routines = d.routines || {};
+    _db.profile  = d.profile  || {};
+    _db.settings = d.settings || {};
+
+    if (d.logs && typeof d.logs === 'object') {
+      _db.logs = d.logs;
+    }
+    // Restore local today's log if Firebase didn't have it
+    if (!_db.logs[todayKey] && localToday) _db.logs[todayKey] = localToday;
+
+    initTodayLog();
+  }
+
+  function loadFromLocal() {
+    const saved = FB.loadLs();
+    if (!saved) return false;
+    _db = {
+      tasks:saved.tasks||{}, routines:saved.routines||{}, logs:saved.logs||{},
+      goals:saved.goals||{}, habits:saved.habits||{}, notes:saved.notes||{},
+      vitals:saved.vitals||{}, finances:saved.finances||{},
+      profile:saved.profile||{}, settings:saved.settings||{}
+    };
+    return true;
+  }
+
+  return { get DB() { return _db; }, todayStr, getLog, initTodayLog, syncFromSnapshot, loadFromLocal };
+})();
+
+/* ════════════════════════════════════════════════════════
+   TASK ENGINE
+   Computes active tasks for any date. Zero duplication.
+   ════════════════════════════════════════════════════════ */
+const TaskEngine = (() => {
+  function getTasksForDate(dateStr) {
+    const date = new Date(dateStr + 'T12:00:00');
+    const dow = date.getDay();
+    const result = {};
+    Object.entries(DataStore.DB.tasks).forEach(([id, t]) => {
+      if (t.active === false) return;
+      const type = t.type || 'one-time';
+      if (type === 'one-time') { result[id] = t; return; }
+      if (type === 'recurring') {
+        const rec = t.recurrence || {}, freq = rec.freq || 'daily';
+        if (freq === 'daily') { result[id] = t; }
+        else if (freq === 'weekly') {
+          const days = Array.isArray(rec.days) ? rec.days : [1,2,3,4,5];
+          if (days.includes(dow)) result[id] = t;
+        } else if (freq === 'interval') {
+          const interval = Math.max(1, rec.interval || 1);
+          const origin = new Date(t.createdAt || Date.now());
+          const originStr = origin.toISOString().split('T')[0];
+          const diff = Math.round((date - new Date(originStr + 'T12:00:00')) / 86400000);
+          if (diff >= 0 && diff % interval === 0) result[id] = t;
+        }
+      }
+    });
+    return result;
+  }
+
+  function isTaskDone(id, dateStr) {
+    const log = DataStore.DB.logs[dateStr];
+    return !!(log && log.tasks && log.tasks[id]);
+  }
+
+  function setTaskDone(id, done, dateStr) {
+    dateStr = dateStr || DataStore.todayStr();
+    const log = DataStore.getLog(dateStr);
+    log.tasks[id] = done;
+    // Mirror to legacy task.done for one-time tasks
+    const t = DataStore.DB.tasks[id];
+    if (t && (!t.type || t.type === 'one-time')) t.done = done;
+    // Real-time write to Firebase — granular path
+    FB.write(`logs/${dateStr}/tasks/${id}`, done);
+    if (t && (!t.type || t.type === 'one-time')) FB.patch(`tasks/${id}`, { done });
+  }
+
+  function getEffectiveDone(id, task, dateStr) {
+    dateStr = dateStr || DataStore.todayStr();
+    if (task.type === 'recurring') return isTaskDone(id, dateStr);
+    return isTaskDone(id, dateStr) || !!task.done;
+  }
+
+  return { getTasksForDate, isTaskDone, setTaskDone, getEffectiveDone };
+})();
+
+/* ════════════════════════════════════════════════════════
+   ROUTINE ENGINE
+   Schedule-aware. Completion tracked in logs — never
+   overwrites historical data. Feeds the live pie chart.
+   ════════════════════════════════════════════════════════ */
+const RoutineEngine = (() => {
+  function getRoutinesForDate(dateStr) {
+    const date = new Date(dateStr + 'T12:00:00'), dow = date.getDay();
+    const result = {};
+    Object.entries(DataStore.DB.routines).forEach(([id, r]) => {
+      if (r.active === false) return;
+      const sched = r.schedule || 'daily';
+      if (sched === 'daily' || sched === 'forever') { result[id] = r; }
+      else if (sched === 'weekly') {
+        const days = Array.isArray(r.days) ? r.days : [0,1,2,3,4,5,6];
+        if (days.includes(dow)) result[id] = r;
+      } else { result[id] = r; }
+    });
+    return result;
+  }
+
+  function isRoutineDone(id, dateStr) {
+    const log = DataStore.DB.logs[dateStr];
+    return !!(log && log.routines && log.routines[id]);
+  }
+
+  function setRoutineDone(id, done, dateStr) {
+    dateStr = dateStr || DataStore.todayStr();
+    const log = DataStore.getLog(dateStr);
+    if (!log.routines) log.routines = {};
+    log.routines[id] = done;
+    // Immediate real-time write
+    FB.write(`logs/${dateStr}/routines/${id}`, done);
+  }
+
+  /* Dynamic pie segments from real routine data. Null = use static fallback. */
+  function getPieSegments(dateStr) {
+    dateStr = dateStr || DataStore.todayStr();
+    const routines = getRoutinesForDate(dateStr);
+    if (!Object.keys(routines).length) return null;
+    const log = DataStore.DB.logs[dateStr] || {};
+    return Object.entries(routines).map(([id, r]) => {
+      const [hh=8, mm=0] = (r.time || '08:00').split(':').map(Number);
+      const s = hh + mm / 60;
+      return { s, e: Math.min(s + (r.duration || 60) / 60, 24), c: r.color || '#D4A843', done: !!(log.routines && log.routines[id]), id };
+    }).sort((a, b) => a.s - b.s);
+  }
+
+  return { getRoutinesForDate, isRoutineDone, setRoutineDone, getPieSegments };
+})();
+
+/* ════════════════════════════════════════════════════════
+   STATS ENGINE
+   All analytics computed live from DataStore.DB.
+   ════════════════════════════════════════════════════════ */
+const StatsEngine = (() => {
+  function dateRange(period) {
+    const n = { today:0, week:6, month:29, year:364 }[period] || 0, today = new Date();
+    return Array.from({length:n+1}, (_,i) => { const d=new Date(today); d.setDate(d.getDate()-(n-i)); return d.toISOString().split('T')[0]; });
+  }
+
+  function getRoutineConsistency(period) {
+    let tracked=0, full=0;
+    dateRange(period).forEach(ds => {
+      const ids = Object.keys(RoutineEngine.getRoutinesForDate(ds));
+      if (!ids.length) return; tracked++;
+      if (ids.every(id => RoutineEngine.isRoutineDone(id, ds))) full++;
+    });
+    return tracked ? Math.round(full / tracked * 100) : 0;
+  }
+
+  function getDashboardStats() {
+    const ds = DataStore.todayStr(), tasks = TaskEngine.getTasksForDate(ds);
+    const log = DataStore.DB.logs[ds] || {}, all = Object.values(DataStore.DB.tasks);
+    const taskDone = Object.entries(tasks).filter(([id,t]) => (log.tasks&&log.tasks[id]) || ((!t.type||t.type==='one-time')&&!!t.done)).length;
+    const gymDone  = all.filter(t=>t.cat==='gym'&&t.done).length;
+    const workDone = all.filter(t=>t.cat==='work'&&t.done).length;
+    const studyDone= all.filter(t=>t.cat==='study'&&t.done).length;
+    const bizDone  = all.filter(t=>t.cat==='business'&&t.done).length;
+    const water = log.water || 0, sleep = DataStore.DB.vitals.sleep || 0;
+    const healthScore = Math.round((water/8)*40 + (Math.min(sleep,9)/9)*40 + (gymDone>0?20:0));
+    return { taskTotal:Object.keys(tasks).length, taskDone, gymDone, workDone, studyDone, bizDone, water, healthScore };
+  }
+
+  return { getDashboardStats };
+})();
+
+/* ════════════════════════════════════════════════════════
+   UI CONTROLLER
+   Injects recurrence + schedule fields into modals
+   at runtime — zero HTML changes.
+   ════════════════════════════════════════════════════════ */
+const UIController = (() => {
+  let _taskInjected = false;
+
+  function injectTaskRecurrence() {
+    if (_taskInjected || document.getElementById('mt-type')) return;
+    const notesField = document.querySelector('#add-modal .field:last-of-type');
+    if (!notesField) return;
+    _taskInjected = true;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'field'; wrap.id = 'mt-recurrence-wrap';
+    wrap.innerHTML = `<label>Task Type</label>
+      <select class="finput" id="mt-type">
+        <option value="one-time">📌 One-Time</option>
+        <option value="recurring">🔁 Recurring</option>
+      </select>`;
+    notesField.after(wrap);
+
+    const opts = document.createElement('div'); opts.id = 'mt-rec-opts';
+    opts.style.cssText = 'display:none;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-bottom:12px';
+    opts.innerHTML = `
+      <div class="field" style="margin:0 0 10px">
+        <label>Frequency</label>
+        <select class="finput" id="mt-freq">
+          <option value="daily">Every Day</option>
+          <option value="weekly">Specific Weekdays</option>
+          <option value="interval">Every N Days</option>
+        </select>
+      </div>
+      <div id="mt-weekly-wrap" style="display:none;margin-bottom:10px">
+        <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:600">Days</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          ${['S','M','T','W','T','F','S'].map((d,i)=>`<label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--t2)"><input type="checkbox" data-day="${i}" style="accent-color:var(--gold);width:14px;height:14px"> ${d}</label>`).join('')}
+        </div>
+      </div>
+      <div id="mt-interval-wrap" style="display:none" class="field" style="margin:0">
+        <label>Repeat every (days)</label>
+        <input class="finput" id="mt-interval" type="number" min="1" max="365" placeholder="e.g. 3">
+      </div>`;
+    wrap.insertAdjacentElement('afterend', opts);
+
+    document.getElementById('mt-type').addEventListener('change', e => {
+      opts.style.display = e.target.value === 'recurring' ? 'block' : 'none';
+    });
+    document.getElementById('mt-freq').addEventListener('change', e => {
+      document.getElementById('mt-weekly-wrap').style.display  = e.target.value === 'weekly'   ? 'block' : 'none';
+      document.getElementById('mt-interval-wrap').style.display= e.target.value === 'interval' ? 'block' : 'none';
+    });
+  }
+
+  function injectRoutineSchedule() {
+    if (document.getElementById('rm-schedule')) return;
+    const colorField = document.getElementById('rm-color')?.closest('.field');
+    if (!colorField) return;
+
+    const schedDiv = document.createElement('div'); schedDiv.className = 'field span2';
+    schedDiv.innerHTML = `<label>Schedule</label>
+      <select class="finput" id="rm-schedule">
+        <option value="daily">🗓 Every Day</option>
+        <option value="weekly">📅 Specific Days</option>
+        <option value="forever">♾️ Forever (Always Active)</option>
+      </select>`;
+    colorField.insertAdjacentElement('afterend', schedDiv);
+
+    const daysDiv = document.createElement('div'); daysDiv.id = 'rm-days-wrap'; daysDiv.className = 'span2';
+    daysDiv.style.cssText = 'display:none;margin-bottom:10px';
+    daysDiv.innerHTML = `<div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:600">Active on</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d,i)=>`<label style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:11px;color:var(--t2)"><input type="checkbox" data-rday="${i}" style="accent-color:var(--gold);width:14px;height:14px"> ${d}</label>`).join('')}
+      </div>`;
+    schedDiv.insertAdjacentElement('afterend', daysDiv);
+
+    document.getElementById('rm-schedule').addEventListener('change', e => {
+      document.getElementById('rm-days-wrap').style.display = e.target.value === 'weekly' ? 'block' : 'none';
+    });
+  }
+
+  function getRecurrenceConfig() {
+    const t = document.getElementById('mt-type');
+    if (!t || t.value !== 'recurring') return { type: 'one-time' };
+    const freq = document.getElementById('mt-freq')?.value || 'daily';
+    const out = { type: 'recurring', recurrence: { freq } };
+    if (freq === 'weekly') {
+      const days = []; document.querySelectorAll('#mt-weekly-wrap input:checked').forEach(cb => days.push(+cb.dataset.day));
+      out.recurrence.days = days.length ? days : [1,2,3,4,5];
+    } else if (freq === 'interval') {
+      out.recurrence.interval = Math.max(1, parseInt(document.getElementById('mt-interval')?.value) || 1);
+    }
+    return out;
+  }
+
+  function resetTaskModal() {
+    const t = document.getElementById('mt-type'); if (t) t.value = 'one-time';
+    const o = document.getElementById('mt-rec-opts'); if (o) o.style.display = 'none';
+    const f = document.getElementById('mt-freq'); if (f) f.value = 'daily';
+    document.getElementById('mt-weekly-wrap')?.style && (document.getElementById('mt-weekly-wrap').style.display = 'none');
+    document.getElementById('mt-interval-wrap')?.style && (document.getElementById('mt-interval-wrap').style.display = 'none');
+    document.querySelectorAll('#mt-weekly-wrap input').forEach(cb => cb.checked = false);
+    const ii = document.getElementById('mt-interval'); if (ii) ii.value = '';
+  }
+
+  return { injectTaskRecurrence, injectRoutineSchedule, getRecurrenceConfig, resetTaskModal };
+})();
+
+/* ════════════════════════════════════════════════════════
+   LEGACY STATE PROXY
+   Backward-compatible STATE.* proxies to DataStore.DB.*
+   ════════════════════════════════════════════════════════ */
+const STATE = new Proxy({}, {
+  get(_, k) { return DataStore.DB[k]; },
+  set(_, k, v) { DataStore.DB[k] = v; return true; }
+});
+
+/* ── Runtime state ── */
+let uid = null;
+let currentPage = 'dashboard';
+let focusMode = false, focusStart = null, focusInterval = null;
+let waterCount = 0;
+let goalsFilter = 'all';
+let readingList = [];
+let _dayCheckKey = DataStore.todayStr();
+
+/* ── Expose globals (full backward compatibility) ── */
+window.navTo=navTo; window.openAuth=openAuth; window.closeAuth=closeAuth;
+window.switchAuth=switchAuth; window.doSignIn=doSignIn; window.doSignUp=doSignUp; window.doSignOut=doSignOut;
+window.openAddModal=openAddModal; window.closeAddModal=closeAddModal; window.submitTask=submitTask;
+window.openGoalModal=openGoalModal; window.closeGoalModal=closeGoalModal; window.submitGoal=submitGoal;
+window.openHabitModal=openHabitModal; window.closeHabitModal=closeHabitModal; window.submitHabit=submitHabit;
+window.filterGoals=filterGoals; window.filterCat=filterCat; window.filterPri=filterPri;
+window.saveNote=saveNote; window.logMacros=logMacros; window.logVitals=logVitals; window.logFinance=logFinance;
+window.startWorkout=startWorkout; window.toggleTimerGym=toggleTimerGym; window.resetTimerGym=resetTimerGym; window.stopTimerGym=stopTimerGym; window.setTimer=setTimer;
+window.togglePomo=togglePomo; window.resetPomo=resetPomo; window.stopPomo=stopPomo; window.setPomoMode=setPomoMode;
+window.toggleFocus=toggleFocus; window.addReading=addReading; window.fabClick=fabClick;
+window._toggleTask=_toggleTask; window._deleteTask=_deleteTask;
+window._deleteGoal=_deleteGoal; window._updateGoalPct=_updateGoalPct;
+window._toggleHabit=_toggleHabit;
+window.togglePw=togglePw; window.checkPwStrength=checkPwStrength; window.checkPwMatch=checkPwMatch;
+window.doForgotPw=doForgotPw; window.openEditProfile=openEditProfile; window.closeEditProfile=closeEditProfile; window.saveProfile=saveProfile;
+window.openNewRoutineModal=openNewRoutineModal; window.closeRoutineModal=closeRoutineModal;
+window.saveRoutine=saveRoutine; window.addModalStep=addModalStep; window.addTemplateRoutine=addTemplateRoutine;
+window.toggleRoutineBody=toggleRoutineBody; window.deleteRoutine=deleteRoutine; window.addStepToRoutine=addStepToRoutine; window.deleteRoutineStep=deleteRoutineStep;
+
+/* ════════════════════════════════════════════════════════
+   AUTH STATE OBSERVER
+   ════════════════════════════════════════════════════════ */
+onAuthStateChanged(auth, user => {
+  uid = user ? user.uid : null;
+  FB.setUid(uid);
+  updateAuthUI(user);
+  if (user) {
+    /* Subscribe to real-time updates for the entire user document.
+       Any change made from another device/tab instantly updates this session. */
+    FB.subscribe(snapshot => {
+      DataStore.syncFromSnapshot(snapshot);
+      if (snapshot.settings?.theme) {
+        loadTheme(snapshot.settings.theme);
+        localStorage.setItem('lifeos_theme', snapshot.settings.theme);
+      }
+      waterCount = (DataStore.DB.logs[DataStore.todayStr()] || {}).water || DataStore.DB.vitals.water || 0;
+      renderAll(); loadNotesIntoUI(); loadVitalsIntoUI(); buildWaterCups();
+    });
+  } else {
+    FB.subscribe(null); // unsubscribe
+    DataStore.DB.tasks={}; DataStore.DB.goals={}; DataStore.DB.habits={};
+    DataStore.DB.notes={}; DataStore.DB.vitals={}; DataStore.DB.finances={};
+    DataStore.DB.routines={}; DataStore.DB.profile={}; DataStore.DB.settings={};
+    renderAll();
+  }
+  bootLocal();
+});
+
+function updateAuthUI(user){
+  const av=document.getElementById('u-av'), lb=document.getElementById('u-lbl');
+  const si=document.getElementById('signed-in-block'), fi=document.getElementById('af-in');
+  const fu=document.getElementById('af-up'), ff=document.getElementById('af-forgot');
+  const tabRow=document.getElementById('auth-tab-row');
+  if(user){
+    const name=user.displayName||user.email.split('@')[0], initial=name[0].toUpperCase();
+    if(av) av.textContent=initial; if(lb) lb.textContent=name.split(' ')[0];
+    if(si) si.style.display='flex';
+    [fi,fu,ff].forEach(f=>{if(f){f.classList.remove('active');f.style.display='none';}});
+    if(tabRow) tabRow.style.display='none';
+    const siAv=document.getElementById('si-avatar'); if(siAv) siAv.textContent=initial;
+    const siNm=document.getElementById('si-name');   if(siNm) siNm.textContent=user.displayName||name;
+    const siEm=document.getElementById('si-email');  if(siEm) siEm.textContent=user.email;
+    const siPh=document.getElementById('si-phone');  if(siPh) siPh.textContent=DataStore.DB.profile.phone||'';
+    const sb=document.getElementById('s-btn'); if(sb){sb.innerHTML='Sign In';sb.disabled=false;}
+    const rb=document.getElementById('r-btn'); if(rb){rb.innerHTML='Create Account';rb.disabled=false;}
+  } else {
+    if(av) av.textContent='?'; if(lb) lb.textContent='Sign In';
+    if(si) si.style.display='none'; if(tabRow) tabRow.style.display='flex';
+    if(fi){fi.classList.add('active');fi.style.display='flex';}
+    [fu,ff].forEach(f=>{if(f){f.classList.remove('active');f.style.display='none';}});
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   DAILY RESET SYSTEM
+   Polls every 60s for midnight crossover.
+   New log entry created — history untouched.
+   ════════════════════════════════════════════════════════ */
+function checkDayChange(){
+  const current = DataStore.todayStr();
+  if (current === _dayCheckKey) return;
+  _dayCheckKey = current;
+  DataStore.initTodayLog();
+  waterCount = 0;
+  // Write fresh log entry for the new day to Firebase
+  FB.write(`logs/${current}`, { tasks:{}, routines:{}, water:0 });
+  buildWaterCups(); renderAll(); updateDate();
+  showToast('🌅 New day! Tasks and routines refreshed.');
+}
+
+/* ── Quotes ── */
+const QUOTES=[{t:'"The secret of getting ahead is getting started."',a:'Mark Twain'},{t:'"Discipline is the bridge between goals and accomplishment."',a:'Jim Rohn'},{t:'"Success is not final, failure is not fatal."',a:'Winston Churchill'},{t:'"The only way to do great work is to love what you do."',a:'Steve Jobs'},{t:'"Don\'t watch the clock; do what it does. Keep going."',a:'Sam Levenson'},{t:'"Hard work beats talent when talent doesn\'t work hard."',a:'Tim Notke'},{t:'"You don\'t have to be great to start, but start to be great."',a:'Zig Ziglar'},{t:'"The future depends on what you do today."',a:'Mahatma Gandhi'},{t:'"Don\'t stop when you\'re tired. Stop when you\'re done."',a:'David Goggins'}];
+
+/* ── Boot ── */
+function bootLocal(){
+  DataStore.loadFromLocal();
+  DataStore.initTodayLog();
+  waterCount = (DataStore.DB.logs[DataStore.todayStr()] || {}).water || 0;
+  UIController.injectTaskRecurrence();
+  setInterval(tickClock, 1000); tickClock();
+  setInterval(checkDayChange, 60000);
+  buildWaterCups(); buildEnergyGrid(); buildAffirmations(); updateGreeting();
+  setInterval(updateGreeting, 60000);
+  updateDate(); renderHabits(); renderReading();
+  const q = QUOTES[new Date().getDay() % QUOTES.length];
+  setText('quote-text', q.t); setText('quote-by', '— '+q.a);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const now = new Date();
+  setText('habit-month', months[now.getMonth()]+' '+now.getFullYear());
+}
+
+/* ════════════════════════════════════════════════════════
+   CLOCK + LIVE PIE CHART
+   Dynamic segments from RoutineEngine when routines exist.
+   Completed = brighter stroke. Fallback = static schedule.
+   ════════════════════════════════════════════════════════ */
+const PIE_STATIC=[{c:'#6366F1',s:0,e:6.5},{c:'#22C55E',s:6.5,e:7.5},{c:'#FF6B47',s:7.5,e:9},{c:'#4A9EFF',s:9,e:13},{c:'#22C55E',s:13,e:14},{c:'#4A9EFF',s:14,e:17},{c:'#A855F7',s:17,e:19},{c:'#F59E0B',s:19,e:21},{c:'#06B6D4',s:21,e:22.5},{c:'#6366F1',s:22.5,e:24}];
+
+function tickClock(){
+  const now=new Date(), h=now.getHours(), m=now.getMinutes(), s=now.getSeconds();
+  setText('dh',String(h).padStart(2,'0')); setText('dm',String(m).padStart(2,'0')); setText('ds',String(s).padStart(2,'0'));
+  drawClock(h,m,s);
+}
+
+function updateDate(){
+  const now=new Date(), days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const str=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  setText('dg-date',str); setText('dash-date',str);
+}
+
+function drawClock(h,m,s){
+  const pc=document.getElementById('pie-canvas'), cc=document.getElementById('clock-face');
+  if(!pc||!cc) return;
+  const ctx=pc.getContext('2d'), ctx2=cc.getContext('2d'), CX=100, CY=100, R=96, RI=64;
+  const dyn=RoutineEngine.getPieSegments(), PIE=(dyn&&dyn.length)?dyn:PIE_STATIC, isDyn=!!(dyn&&dyn.length);
+
+  /* Detect light theme — entire clock disc must be dark so hands are visible */
+  const _isLight = document.documentElement.getAttribute('data-theme') === 'arctic';
+  const _discBg  = '#0C0C14'; // dark disc background used on light theme
+  const _innerBg = _isLight
+    ? _discBg
+    : (getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#0A0A0F');
+
+  ctx.clearRect(0,0,200,200);
+
+  /* On light theme: fill entire clock disc dark FIRST so pie segments sit on dark bg */
+  if(_isLight){
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+    ctx.fillStyle=_discBg; ctx.fill();
+  }
+
+  PIE.forEach(seg=>{
+    const sa=(seg.s/24)*Math.PI*2-Math.PI/2, ea=(seg.e/24)*Math.PI*2-Math.PI/2;
+    const fa=isDyn?(seg.done?'55':'1A'):'2A', sa2=isDyn?(seg.done?'CC':'44'):'66';
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.arc(CX,CY,R,sa,ea); ctx.closePath();
+    ctx.fillStyle=seg.c+fa; ctx.fill();
+    ctx.beginPath(); ctx.arc(CX,CY,R,sa,ea);
+    ctx.strokeStyle=seg.c+sa2; ctx.lineWidth=isDyn&&seg.done?2.5:1.5; ctx.stroke();
+  });
+
+  /* Outer ring border — visible on both dark and light themes */
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+  ctx.strokeStyle=_isLight?'rgba(0,0,0,0.15)':'rgba(255,255,255,0.08)'; ctx.lineWidth=1; ctx.stroke();
+
+  /* Inner fill — always dark */
+  ctx.beginPath(); ctx.arc(CX,CY,RI,0,Math.PI*2); ctx.fillStyle=_innerBg; ctx.fill();
+  ctx.strokeStyle=_isLight?'rgba(255,255,255,0.15)':'rgba(255,255,255,0.10)'; ctx.lineWidth=1; ctx.stroke();
+
+  /* Hour ticks */
+  for(let i=0;i<12;i++){
+    const a=(i/12)*Math.PI*2-Math.PI/2, r1=RI+2, r2=RI+(i%3===0?9:5);
+    ctx.beginPath(); ctx.moveTo(CX+Math.cos(a)*r1,CY+Math.sin(a)*r1); ctx.lineTo(CX+Math.cos(a)*r2,CY+Math.sin(a)*r2);
+    ctx.strokeStyle=i%3===0?'rgba(255,255,255,0.35)':'rgba(255,255,255,0.15)'; ctx.lineWidth=i%3===0?1.5:1; ctx.stroke();
+  }
+
+  /* Clock hands — always light so they show on dark inner face */
+  ctx2.clearRect(0,0,200,200);
+  const hA=((h%12)+m/60)/12*Math.PI*2-Math.PI/2, mA=(m+s/60)/60*Math.PI*2-Math.PI/2, sA=s/60*Math.PI*2-Math.PI/2;
+  ctx2.beginPath(); ctx2.moveTo(CX,CY); ctx2.lineTo(CX+Math.cos(hA)*36,CY+Math.sin(hA)*36); ctx2.strokeStyle='rgba(240,238,232,0.95)'; ctx2.lineWidth=3.5; ctx2.lineCap='round'; ctx2.stroke();
+  ctx2.beginPath(); ctx2.moveTo(CX,CY); ctx2.lineTo(CX+Math.cos(mA)*50,CY+Math.sin(mA)*50); ctx2.strokeStyle='rgba(240,238,232,0.80)'; ctx2.lineWidth=2; ctx2.lineCap='round'; ctx2.stroke();
+  ctx2.beginPath(); ctx2.moveTo(CX,CY); ctx2.lineTo(CX+Math.cos(sA)*56,CY+Math.sin(sA)*56); ctx2.strokeStyle='#D4A843'; ctx2.lineWidth=1.2; ctx2.lineCap='round'; ctx2.stroke();
+  ctx2.beginPath(); ctx2.arc(CX,CY,3.5,0,Math.PI*2); ctx2.fillStyle='#D4A843'; ctx2.fill();
+}
+
+function updateGreeting(){
+  const h=new Date().getHours();
+  setText('dg-greeting', h<5?'🌙 Rest well':h<12?'🌅 Rise & Conquer':h<14?'⚡ Stay Sharp':h<17?'💪 Keep Pushing':h<20?'🚀 Final Sprint':'🌙 Wind Down & Reflect');
+  setText('dash-title', h<12?'Good morning ✦':h<17?'Good afternoon ✦':'Good evening ✦');
+}
+
+/* ── Navigation ── */
+function navTo(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+page); if(pg) pg.classList.add('active');
+  if(btn) btn.classList.add('active'); currentPage=page;
+  if(page==='goals') renderGoals(goalsFilter);
+  if(page==='habits') renderHabits();
+  if(page==='routines') renderRoutines();
+  if(page==='dashboard'){ renderDashTasks(); renderDashGoals(); updateStats(); }
+}
+
+/* ════════════════════════════════════════════════════════
+   WATER — real-time write on every click
+   ════════════════════════════════════════════════════════ */
+function buildWaterCups(){
+  const el=document.getElementById('water-cups'); if(!el) return;
+  el.innerHTML='';
+  for(let i=0;i<8;i++){
+    const div=document.createElement('div'); div.className='w-cup'+(i<waterCount?' filled':'');
+    div.innerHTML=`<div class="w-cup-fill"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6 8 4 12 4 15a8 8 0 0016 0c0-3-2-7-8-13z"/></svg>`;
+    div.onclick=()=>logWater(i+1); el.appendChild(div);
+  }
+  setText('water-lbl',waterCount+'/8'); setText('st-water',waterCount); setText('h-water',waterCount+'/8');
+}
+
+function logWater(n){
+  waterCount = n;
+  DataStore.getLog(DataStore.todayStr()).water = n;
+  // Real-time write — two paths: today's log + legacy vitals
+  FB.write(`logs/${DataStore.todayStr()}/water`, n);
+  FB.write('vitals/water', n);
+  buildWaterCups(); showToast(`💧 ${n}/8 glasses logged!`);
+}
+
+function restoreWater(){
+  waterCount = (DataStore.DB.logs[DataStore.todayStr()]||{}).water || DataStore.DB.vitals.water || 0;
+  buildWaterCups();
+}
+
+/* ── Energy ── */
+function buildEnergyGrid(){
+  const el=document.getElementById('energy-grid'); if(!el) return; el.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const b=document.createElement('button'); b.className='e-btn'; b.textContent=i;
+    if(DataStore.DB.vitals.energy==i) b.classList.add('active');
+    b.onclick=()=>{
+      document.querySelectorAll('.e-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+      DataStore.DB.vitals.energy=i;
+      FB.write('vitals/energy', i); // real-time
+      showToast(`Energy: ${i}/10`);
+    };
+    el.appendChild(b);
+  }
+}
+
+/* ── Affirmations ── */
+const AFFS=["I am disciplined, focused, and unstoppable.","Every day I grow stronger, smarter, and wealthier.","I attract success through consistent action.","My body is strong, my mind is sharp, my spirit is resilient.","I am the CEO of my own life.","Hard work today creates freedom tomorrow.","I learn from every challenge and emerge stronger.","I invest in myself every single day.","I am becoming the best version of myself.","Success is the result of relentless daily execution."];
+function buildAffirmations(){
+  const el=document.getElementById('aff-list'); if(!el) return; el.innerHTML='';
+  AFFS.forEach(a=>{ const d=document.createElement('div'); d.className='aff-item'; d.textContent=a; el.appendChild(d); });
+}
+
+/* ── Reading ── */
+const DEFAULT_READING=[{emoji:'📖',title:'Atomic Habits',meta:'James Clear · Habits & Systems'},{emoji:'📖',title:'Deep Work',meta:'Cal Newport · Focus & Productivity'},{emoji:'📖',title:'The 4-Hour Work Week',meta:'Tim Ferriss · Lifestyle Design'},{emoji:'🎙️',title:'Diary of a CEO Podcast',meta:'Steven Bartlett · Business'}];
+function renderReading(){
+  const el=document.getElementById('reading-list'); if(!el) return; el.innerHTML='';
+  const list=readingList.length?readingList:DEFAULT_READING;
+  list.forEach(r=>{ const d=document.createElement('div'); d.className='read-item'; d.innerHTML=`<div class="read-icon" style="background:rgba(168,85,247,.12)">${r.emoji}</div><div><div class="read-title">${esc(r.title)}</div><div class="read-meta">${esc(r.meta)}</div></div>`; el.appendChild(d); });
+}
+function addReading(){
+  const title=prompt('Book / Course / Podcast title:'); if(!title?.trim()) return;
+  const meta=prompt('Author / Type:')||'';
+  readingList.push({emoji:'📖',title:title.trim(),meta:meta.trim()}); renderReading(); showToast('📚 Added!');
+}
+
+/* ── Render All ── */
+function renderAll(){
+  renderTaskList('gym-task-list','gym'); renderTaskList('work-task-list','work');
+  renderTaskList('study-task-list','study'); renderTaskList('health-task-list','health');
+  renderTaskList('biz-task-list','business');
+  renderDashTasks(); renderGoals(goalsFilter); renderDashGoals();
+  renderFinances(); updateStats(); restoreWater(); buildEnergyGrid(); renderRoutines();
+}
+
+/* ── Task Rendering ── */
+const CAT_COLOR={gym:'var(--gym)',work:'var(--work)',study:'var(--study)',health:'var(--health)',business:'var(--biz)',mindset:'var(--mind)',general:'var(--gold)'};
+const PRI_COLOR={high:'var(--danger)',medium:'var(--gold)',low:'var(--health)'};
+
+function renderTaskList(containerId,cat,filter){
+  const el=document.getElementById(containerId); if(!el) return; el.innerHTML='';
+  const today=DataStore.todayStr();
+  let items=Object.entries(TaskEngine.getTasksForDate(today)).filter(([,t])=>t.cat===cat);
+  if(filter&&filter!=='all'){
+    if(['high','medium','low'].includes(filter)) items=items.filter(([,t])=>t.priority===filter);
+    else items=items.filter(([,t])=>t.subcategory===filter||t.text.toLowerCase().includes(filter));
+  }
+  items.sort(([,a],[,b])=>(a.createdAt||0)-(b.createdAt||0));
+  if(!items.length){ el.innerHTML=`<div class="empty-state">No ${cat} tasks — add one above ↗</div>`; return; }
+  items.forEach(([id,t])=>el.appendChild(makeTaskEl(id,t,today)));
+}
+
+function renderDashTasks(){
+  const el=document.getElementById('dash-tasks'); if(!el) return; el.innerHTML='';
+  const today=DataStore.todayStr(), todayTasks=TaskEngine.getTasksForDate(today);
+  const priOrd={high:0,medium:1,low:2};
+  const sorted=Object.entries(todayTasks).sort(([,a],[,b])=>(priOrd[a.priority]||1)-(priOrd[b.priority]||1));
+  if(!sorted.length) el.innerHTML='<div class="empty-state">No tasks yet — press ⌘K or + to add one</div>';
+  else sorted.slice(0,10).forEach(([id,t])=>el.appendChild(makeTaskEl(id,t,today)));
+  const done=sorted.filter(([id,t])=>TaskEngine.getEffectiveDone(id,t,today)).length;
+  setText('dash-done',done+' / '+sorted.length);
+}
+
+function makeTaskEl(id,t,dateStr){
+  dateStr=dateStr||DataStore.todayStr();
+  const done=TaskEngine.getEffectiveDone(id,t,dateStr);
+  const div=document.createElement('div'); div.className='t-item'+(done?' done':''); div.dataset.id=id;
+  const col=CAT_COLOR[t.cat]||'var(--gold)';
+  const rb=t.type==='recurring'?`<span class="t-badge" style="background:rgba(74,158,255,.12);color:var(--work);font-size:9px" title="${_recurLabel(t)}">🔁</span>`:'';
+  div.innerHTML=`
+    <div class="t-dot" style="background:${PRI_COLOR[t.priority]||'var(--t3)'}"></div>
+    <div class="t-cb ${done?'chk':''}" style="${done?'background:'+col+';border-color:transparent':''}" onclick="_toggleTask('${id}',${!done})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <span class="t-txt">${esc(t.text)}</span>${rb}
+    <span class="t-badge" style="background:${col}20;color:${col}">${t.cat||'general'}</span>
+    <button class="t-del" onclick="_deleteTask('${id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+    </button>`;
+  return div;
+}
+
+function _recurLabel(t){
+  if(!t.recurrence) return 'Recurring';
+  const f=t.recurrence.freq;
+  if(f==='daily') return 'Every day';
+  if(f==='weekly'){ const n=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']; return (t.recurrence.days||[]).map(d=>n[d]).join(', '); }
+  return `Every ${t.recurrence.interval} days`;
+}
+
+function _toggleTask(id,val){
+  // TaskEngine.setTaskDone already calls FB.write internally
+  TaskEngine.setTaskDone(id, val, DataStore.todayStr());
+  renderAll();
+}
+
+async function _deleteTask(id){
+  const el=document.querySelector(`.t-item[data-id="${id}"]`);
+  if(el){ el.classList.add('removing'); await sleep(260); }
+  delete DataStore.DB.tasks[id];
+  await FB.del(`tasks/${id}`); // real-time delete
+  renderAll(); showToast('Deleted');
+}
+
+/* ── Stats ── */
+function updateStats(){
+  const s=StatsEngine.getDashboardStats();
+  setText('st-gym',s.gymDone); setText('st-work',s.workDone); setText('st-study',s.studyDone);
+  setText('st-health',s.healthScore); setText('st-water',s.water);
+  setText('work-done',s.workDone); setText('study-done',s.studyDone); setText('gym-sess',s.gymDone);
+  setText('biz-done',s.bizDone); setText('gym-mins',s.gymDone*45); setText('gym-cal',s.gymDone*320);
+  setText('gym-streak',computeStreak()); setText('study-streak-disp',computeStreak());
+  const v=DataStore.DB.vitals;
+  if(v.macros){ const m=v.macros; setText('h-cal',Math.round((m.p||0)*4+(m.c||0)*4+(m.f||0)*9)); }
+  setText('h-sleep',(v.sleep||0)+'h'); setText('h-steps',(v.steps||0).toLocaleString()); setText('h-water',s.water+'/8');
+}
+
+function computeStreak(){
+  const today=DataStore.todayStr(), habits=DataStore.DB.habits;
+  if(habits.gym&&habits.gym[today]) return 1; return 0;
+}
+
+/* ── Goals ── */
+function renderGoals(filter){
+  goalsFilter=filter||'all'; const el=document.getElementById('goals-list'); if(!el) return; el.innerHTML='';
+  let entries=Object.entries(DataStore.DB.goals);
+  if(goalsFilter!=='all') entries=entries.filter(([,g])=>g.cat===goalsFilter);
+  entries.sort(([,a],[,b])=>(b.createdAt||0)-(a.createdAt||0));
+  const total=Object.keys(DataStore.DB.goals).length;
+  const done=Object.values(DataStore.DB.goals).filter(g=>g.pct>=100).length;
+  const avg=total?Math.round(Object.values(DataStore.DB.goals).reduce((s,g)=>s+(g.pct||0),0)/total):0;
+  setText('goals-total',total); setText('goals-done',done); setText('goals-avg',avg+'%');
+  if(!entries.length){ el.innerHTML='<div class="empty-state">No goals — set your first!</div>'; return; }
+  entries.forEach(([id,g])=>el.appendChild(makeGoalEl(id,g)));
+}
+
+function makeGoalEl(id,g){
+  const div=document.createElement('div'); div.className='g-item';
+  const col=CAT_COLOR[g.cat]||'var(--gold)';
+  const emoji={gym:'🏋️',work:'💼',study:'📚',health:'❤️',business:'💰',mindset:'🧠',finance:'💵'}[g.cat]||'🎯';
+  const pct=g.pct||0;
+  div.innerHTML=`<div class="g-icon" style="background:${col}1A">${emoji}</div>
+    <div class="g-info"><div class="g-title">${esc(g.title)}</div><div class="g-meta">${g.cat||''} ${g.deadline?'· Due: '+g.deadline:''}</div>
+    <div class="g-bar"><div class="g-fill" style="width:${pct}%;background:${col}"></div></div></div>
+    <div class="g-pct" style="color:${col}">${pct}%</div>
+    <div style="display:flex;flex-direction:column;gap:4px;margin-left:6px">
+      <button onclick="_updateGoalPct('${id}',${Math.min(pct+10,100)})" style="background:rgba(34,197,94,.12);color:var(--health);border:none;border-radius:5px;cursor:pointer;font-size:11px;padding:3px 6px;font-family:'DM Sans',sans-serif">+10</button>
+      <button onclick="_deleteGoal('${id}')" style="background:rgba(239,68,68,.1);color:var(--danger);border:none;border-radius:5px;cursor:pointer;font-size:11px;padding:3px 6px;font-family:'DM Sans',sans-serif">✕</button>
+    </div>`;
+  return div;
+}
+
+async function _updateGoalPct(id,pct){
+  const newPct=Math.min(pct,100); if(!DataStore.DB.goals[id]) return;
+  DataStore.DB.goals[id].pct=newPct;
+  await FB.patch(`goals/${id}`,{pct:newPct}); // real-time
+  renderGoals(goalsFilter); if(newPct>=100) showToast('🎉 Goal completed!');
+}
+
+async function _deleteGoal(id){
+  delete DataStore.DB.goals[id];
+  await FB.del(`goals/${id}`); // real-time
+  renderGoals(goalsFilter); renderDashGoals();
+}
+
+function renderDashGoals(){
+  const el=document.getElementById('dash-goals'); if(!el) return; el.innerHTML='';
+  const top=Object.entries(DataStore.DB.goals).slice(0,4);
+  if(!top.length){ el.innerHTML='<div class="empty-state" style="padding:16px">No goals set yet</div>'; return; }
+  top.forEach(([id,g])=>el.appendChild(makeGoalEl(id,g)));
+}
+
+function filterGoals(cat,btn){
+  document.querySelectorAll('#goal-tabs .tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active'); renderGoals(cat);
+}
+
+/* ── Habits ── */
+const DEFAULT_HABITS=[{id:'gym',name:'🏋️ Gym Workout',color:'#FF6B47'},{id:'morning',name:'🌅 Morning Routine',color:'#22C55E'},{id:'read',name:'📚 Read 30 min',color:'#A855F7'},{id:'meditate',name:'🧘 Meditate',color:'#06B6D4'},{id:'nophone',name:'📵 No Phone 1hr',color:'#F59E0B'},{id:'journal',name:'✍️ Journal',color:'#4A9EFF'},{id:'sleep',name:'😴 Sleep by 10:30pm',color:'#6366F1'},{id:'water8',name:'💧 8 Glasses Water',color:'#06B6D4'},{id:'nojunk',name:'🥗 No Junk Food',color:'#22C55E'},{id:'biz',name:'💰 Work on Business',color:'#F59E0B'}];
+function getHabits(){ return [...DEFAULT_HABITS,...(DataStore.DB.habits.__custom||[])]; }
+
+function renderHabits(){
+  const el=document.getElementById('habit-container'); if(!el) return; el.innerHTML='';
+  const dates=[]; for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i); dates.push(d.toISOString().split('T')[0]); }
+  const dayLetters=['S','M','T','W','T','F','S'];
+  getHabits().forEach(h=>{
+    const completions=DataStore.DB.habits[h.id]||{};
+    let streak=0; for(let i=dates.length-1;i>=0;i--){ if(completions[dates[i]]) streak++; else break; }
+    const row=document.createElement('div'); row.className='h-row';
+    row.innerHTML=`<div class="h-name">${h.name}<span class="h-streak">${streak>0?'🔥 '+streak+' day streak':'— start today'}</span></div>
+      <div class="h-grid">${dates.map((d,i)=>{
+        const done=!!completions[d], dl=dayLetters[new Date(d+'T12:00:00').getDay()];
+        return `<div class="h-cell ${done?'on':''}" style="${done?'background:'+h.color+';border-color:'+h.color:'background:var(--card2)'}" onclick="_toggleHabit('${h.id}','${d}')" title="${d}">${done?'✓':''}<span class="h-cell-day">${dl}</span></div>`;
+      }).join('')}</div>`;
+    el.appendChild(row);
+  });
+}
+
+function _toggleHabit(hid,date){
+  const current=(DataStore.DB.habits[hid]&&DataStore.DB.habits[hid][date])||false;
+  const newVal=!current;
+  if(!DataStore.DB.habits[hid]) DataStore.DB.habits[hid]={};
+  DataStore.DB.habits[hid][date]=newVal;
+  FB.write(`habits/${hid}/${date}`, newVal); // real-time granular write
+  renderHabits(); showToast(newVal?'✅ Habit logged!':'Habit unmarked');
+}
+
+/* ── Notes ── */
+const NOTE_IDS={gym:'gym-notes',work:'work-notes',study:'study-notes',biz:'biz-notes',journal:'jn-grateful',reflect:'rf-well'};
+function saveNote(key){
+  const elId=NOTE_IDS[key]; if(!elId) return;
+  const val=document.getElementById(elId)?.value||'';
+  DataStore.DB.notes[key]=val;
+  FB.write(`notes/${key}`, val); // real-time
+  showToast('📝 Note saved!');
+}
+function loadNotesIntoUI(){
+  Object.entries(NOTE_IDS).forEach(([key,elId])=>{ const el=document.getElementById(elId); if(el&&DataStore.DB.notes[key]) el.value=DataStore.DB.notes[key]; });
+}
+
+/* ── Vitals ── */
+function logVitals(){
+  const sl=parseFloat(document.getElementById('in-sl')?.value)||0, st=parseInt(document.getElementById('in-st')?.value)||0;
+  const hr=parseInt(document.getElementById('in-hr')?.value)||0, md=parseInt(document.getElementById('in-md')?.value)||0;
+  Object.assign(DataStore.DB.vitals,{sleep:sl,steps:st,hr,mood:md});
+  // Real-time write for each vital
+  FB.patch('vitals',{sleep:sl,steps:st,hr,mood:md});
+  updateStats(); showToast(`😴 ${sl}h sleep · 🚶 ${st.toLocaleString()} steps logged!`);
+}
+function loadVitalsIntoUI(){
+  const v=DataStore.DB.vitals;
+  if(v.sleep) setVal('in-sl',v.sleep); if(v.steps) setVal('in-st',v.steps);
+  if(v.hr) setVal('in-hr',v.hr); if(v.mood) setVal('in-md',v.mood);
+  if(v.macros){ const m=v.macros; setVal('in-p',m.p); setVal('in-c',m.c); setVal('in-f',m.f); setVal('in-fi',m.fi); _setMacroBar('mp-fill','mp-v',m.p||0,150); _setMacroBar('mc-fill','mc-v',m.c||0,200); _setMacroBar('mf-fill','mf-v',m.f||0,60); _setMacroBar('mfi-fill','mfi-v',m.fi||0,30); setText('h-cal',Math.round((m.p||0)*4+(m.c||0)*4+(m.f||0)*9)); }
+}
+function setVal(id,val){ const el=document.getElementById(id); if(el) el.value=val; }
+
+/* ── Macros ── */
+function _setMacroBar(fillId,valId,val,max){ const fill=document.getElementById(fillId),valEl=document.getElementById(valId); if(fill) fill.style.width=Math.min(val/max*100,100)+'%'; if(valEl) valEl.textContent=val; }
+function logMacros(){
+  const p=parseFloat(document.getElementById('in-p')?.value)||0, c=parseFloat(document.getElementById('in-c')?.value)||0;
+  const f=parseFloat(document.getElementById('in-f')?.value)||0, fi=parseFloat(document.getElementById('in-fi')?.value)||0;
+  const cals=Math.round(p*4+c*4+f*9), macros={p,c,f,fi,cals};
+  DataStore.DB.vitals.macros=macros;
+  FB.write('vitals/macros', macros); // real-time
+  _setMacroBar('mp-fill','mp-v',p,150); _setMacroBar('mc-fill','mc-v',c,200); _setMacroBar('mf-fill','mf-v',f,60); _setMacroBar('mfi-fill','mfi-v',fi,30);
+  setText('h-cal',cals); showToast(`🔥 ${cals} kcal logged!`);
+}
+
+/* ── Finance ── */
+function logFinance(){
+  const desc=document.getElementById('fin-desc')?.value.trim(), amt=parseFloat(document.getElementById('fin-amt')?.value), type=document.getElementById('fin-type')?.value;
+  if(!desc||!amt||amt<=0){ showToast('⚠️ Fill in description and amount'); return; }
+  const id='f'+Date.now(), item={desc,amt,type,date:new Date().toLocaleDateString()};
+  DataStore.DB.finances[id]=item;
+  FB.write(`finances/${id}`, item); // real-time
+  setVal('fin-desc',''); setVal('fin-amt',''); renderFinances();
+  showToast(type==='income'?`💵 +$${amt} logged`:`📤 -$${amt} logged`);
+}
+
+function renderFinances(){
+  const el=document.getElementById('fin-log'); if(!el) return; el.innerHTML='';
+  const items=Object.entries(DataStore.DB.finances).sort(([,a],[,b])=>new Date(b.date)-new Date(a.date));
+  if(!items.length){ el.innerHTML='<div class="empty-state" style="padding:16px">No transactions yet</div>'; return; }
+  let totalIn=0, totalOut=0;
+  items.forEach(([,f])=>{
+    const d=document.createElement('div'); d.className='fin-row';
+    d.innerHTML=`<div><div class="fin-desc">${esc(f.desc)}</div><div class="fin-date">${f.date}</div></div><div class="fin-amt ${f.type==='income'?'in':'out'}">${f.type==='income'?'+':'-'}$${Number(f.amt).toFixed(2)}</div>`;
+    el.appendChild(d); if(f.type==='income') totalIn+=Number(f.amt); else totalOut+=Number(f.amt);
+  });
+  setText('biz-rev','$'+totalIn.toFixed(0)); setText('biz-exp','$'+totalOut.toFixed(0)); setText('biz-profit','$'+(totalIn-totalOut).toFixed(0));
+  const profitEl=document.getElementById('biz-profit'); if(profitEl) profitEl.style.color=(totalIn-totalOut)>=0?'var(--health)':'var(--danger)';
+}
+
+/* ── Gym Timer ── */
+let gymTimerState={secs:0,total:0,mode:'sw',running:false,interval:null};
+function setTimer(btn,scope){ document.querySelectorAll('#gym-timer-modes .t-mode').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const secs=parseInt(btn.dataset.secs)||0; gymTimerState.mode=btn.dataset.mode||'sw'; gymTimerState.secs=secs; gymTimerState.total=secs; gymTimerState.running=false; clearInterval(gymTimerState.interval); setText('gym-timer',fmtTime(secs)); const bar=document.getElementById('gym-bar'); if(bar) bar.style.width='0%'; const pb=document.getElementById('gym-play'); if(pb) pb.textContent='▶'; }
+function toggleTimerGym(){
+  const state=gymTimerState, pb=document.getElementById('gym-play');
+  if(state.running){ clearInterval(state.interval); state.running=false; if(pb) pb.textContent='▶'; }
+  else {
+    state.running=true; if(pb) pb.textContent='⏸';
+    state.interval=setInterval(()=>{
+      if(state.mode==='sw') state.secs++;
+      else{ state.secs--; if(state.secs<=0){ clearInterval(state.interval); state.running=false; if(pb) pb.textContent='▶'; showToast('⏱ Timer done!'); state.secs=0; } }
+      setText('gym-timer',fmtTime(state.secs));
+      const bar=document.getElementById('gym-bar'); if(bar&&state.total>0){ const pct=state.mode==='sw'?Math.min(state.secs/state.total*100,100):(state.total-state.secs)/state.total*100; bar.style.width=Math.min(pct,100)+'%'; }
+    },1000);
+  }
+}
+function resetTimerGym(){ clearInterval(gymTimerState.interval); gymTimerState.running=false; gymTimerState.secs=gymTimerState.total; setText('gym-timer',fmtTime(gymTimerState.secs)); const bar=document.getElementById('gym-bar'); if(bar) bar.style.width='0%'; const pb=document.getElementById('gym-play'); if(pb) pb.textContent='▶'; }
+function stopTimerGym(){ resetTimerGym(); }
+function startWorkout(){ showToast('💪 Workout started! Hit ▶ to begin timer.'); }
+
+/* ── Pomodoro ── */
+let pomoState={secs:1500,total:1500,running:false,interval:null,count:0,totalMin:0};
+function setPomoMode(btn){ document.querySelectorAll('#pomo-modes .t-mode').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const secs=parseInt(btn.dataset.secs)||1500; pomoState.secs=secs; pomoState.total=secs; pomoState.running=false; clearInterval(pomoState.interval); setText('pomo-disp',fmtTime(secs)); const bar=document.getElementById('pomo-bar'); if(bar) bar.style.width='0%'; const pb=document.getElementById('pomo-play'); if(pb) pb.textContent='▶'; }
+function togglePomo(){
+  const pb=document.getElementById('pomo-play');
+  if(pomoState.running){ clearInterval(pomoState.interval); pomoState.running=false; if(pb) pb.textContent='▶'; }
+  else {
+    pomoState.running=true; if(pb) pb.textContent='⏸';
+    pomoState.interval=setInterval(()=>{
+      pomoState.secs--; setText('pomo-disp',fmtTime(pomoState.secs));
+      const bar=document.getElementById('pomo-bar'); if(bar) bar.style.width=((pomoState.total-pomoState.secs)/pomoState.total*100)+'%';
+      if(pomoState.secs<=0){ clearInterval(pomoState.interval); pomoState.running=false; if(pb) pb.textContent='▶';
+        pomoState.count++; pomoState.totalMin+=Math.round(pomoState.total/60);
+        setText('pomo-count',pomoState.count); setText('pomo-total-min',pomoState.totalMin+'m');
+        setText('pomo-sessions',pomoState.count); setText('focus-time',pomoState.totalMin+'m');
+        FB.write('vitals/focusMins', pomoState.totalMin); // real-time
+        showToast(pomoState.total===300||pomoState.total===900?'☕ Break over!':'🍅 Pomodoro done! Take a break.');
+      }
+    },1000);
+  }
+}
+function resetPomo(){ clearInterval(pomoState.interval); pomoState.running=false; pomoState.secs=pomoState.total; setText('pomo-disp',fmtTime(pomoState.secs)); const bar=document.getElementById('pomo-bar'); if(bar) bar.style.width='0%'; const pb=document.getElementById('pomo-play'); if(pb) pb.textContent='▶'; }
+function stopPomo(){ resetPomo(); }
+
+/* ── Focus Mode ── */
+function toggleFocus(){
+  focusMode=!focusMode; const btn=document.getElementById('focus-btn');
+  if(focusMode){
+    focusStart=Date.now(); clearInterval(focusInterval);
+    focusInterval=setInterval(()=>{ const e=Math.floor((Date.now()-focusStart)/1000); setText('focus-time',Math.floor(e/60)+'m'); if(btn) btn.textContent='🎯 Focusing… '+fmtTime(e); },1000);
+    if(btn){ btn.textContent='🎯 Focusing… 00:00'; btn.style.background='rgba(74,158,255,.15)'; btn.style.color='var(--work)'; }
+    showToast('🎯 Focus mode on!');
+  } else {
+    clearInterval(focusInterval); const elapsed=focusStart?Math.floor((Date.now()-focusStart)/60000):0;
+    FB.write('vitals/focusMins', elapsed); // real-time
+    if(btn){ btn.textContent='🎯 Focus Mode'; btn.style.background=''; btn.style.color=''; }
+    showToast(`Focus session ended: ${elapsed} min`);
+  }
+}
+
+/* ── Task Filters ── */
+function filterCat(btn,listId,cat,sub){ const g=btn.closest('.tabs')||btn.parentElement; g.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderTaskList(listId,cat,sub==='all'?null:sub); }
+function filterPri(btn,listId,cat,pri){ const g=btn.closest('.tabs')||btn.parentElement; g.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderTaskList(listId,cat,pri==='all'?null:pri); }
+
+/* ── Add Task Modal ── */
+function openAddModal(cat){ const el=document.getElementById('add-modal'), cs=document.getElementById('mt-cat'); if(cs&&cat&&cat!=='dashboard') cs.value=cat; if(el) el.classList.add('open'); setTimeout(()=>document.getElementById('mt-text')?.focus(),150); }
+function closeAddModal(){ document.getElementById('add-modal')?.classList.remove('open'); }
+
+function submitTask(){
+  const text=(document.getElementById('mt-text')?.value||'').trim();
+  if(!text){ const el=document.getElementById('mt-text'); if(el){el.style.borderColor='var(--danger)';setTimeout(()=>el.style.borderColor='',1200);} return; }
+  const cat=document.getElementById('mt-cat')?.value||'general', pri=document.getElementById('mt-pri')?.value||'medium';
+  const notes=(document.getElementById('mt-notes')?.value||'').trim();
+  const recConfig=UIController.getRecurrenceConfig();
+  const id='t'+Date.now();
+  const task={text,cat,priority:pri,notes,done:false,createdAt:Date.now(),active:true,...recConfig};
+  DataStore.DB.tasks[id]=task;
+  FB.write(`tasks/${id}`, task); // real-time — triggers onValue listener on all devices
+  setVal('mt-text',''); setVal('mt-notes','');
+  UIController.resetTaskModal(); closeAddModal();
+  showToast(task.type==='recurring'?'🔁 Recurring task added!':'✅ Task added!');
+}
+
+/* ── Goals Modal ── */
+function openGoalModal(){ document.getElementById('goal-modal')?.classList.add('open'); }
+function closeGoalModal(){ document.getElementById('goal-modal')?.classList.remove('open'); }
+function submitGoal(){
+  const title=(document.getElementById('g-title')?.value||'').trim();
+  if(!title){ const el=document.getElementById('g-title'); if(el){el.style.borderColor='var(--danger)';setTimeout(()=>el.style.borderColor='',1200);} return; }
+  const cat=document.getElementById('g-cat')?.value||'gym', deadline=document.getElementById('g-deadline')?.value||'';
+  const pct=Math.min(100,Math.max(0,parseInt(document.getElementById('g-pct')?.value)||0));
+  const id='g'+Date.now(), goal={title,cat,deadline,pct,createdAt:Date.now()};
+  DataStore.DB.goals[id]=goal;
+  FB.write(`goals/${id}`, goal); // real-time
+  setVal('g-title',''); setVal('g-pct',''); closeGoalModal(); showToast('🎯 Goal set!');
+}
+
+/* ── Habit Modal ── */
+function openHabitModal(){ document.getElementById('habit-modal')?.classList.add('open'); }
+function closeHabitModal(){ document.getElementById('habit-modal')?.classList.remove('open'); }
+function submitHabit(){
+  const name=(document.getElementById('h-name')?.value||'').trim();
+  if(!name){ showToast('⚠️ Please enter a habit name'); return; }
+  const emoji=document.getElementById('h-emoji')?.value||'✅', color=document.getElementById('h-color')?.value||'#D4A843';
+  const id='h'+Date.now(), newHabit={id,name:emoji+' '+name,color};
+  if(!DataStore.DB.habits.__custom) DataStore.DB.habits.__custom=[];
+  DataStore.DB.habits.__custom.push(newHabit);
+  FB.write('habits/__custom', DataStore.DB.habits.__custom); // real-time
+  setVal('h-name',''); setVal('h-emoji',''); closeHabitModal(); renderHabits(); showToast('✅ Habit added!');
+}
+
+/* ── Auth ── */
+function openAuth(){ document.getElementById('auth-slide').classList.add('open'); document.getElementById('auth-overlay').classList.add('open'); }
+function closeAuth(){ document.getElementById('auth-slide').classList.remove('open'); document.getElementById('auth-overlay').classList.remove('open'); }
+function switchAuth(tab){
+  const slider=document.getElementById('a-slider'), tabIn=document.getElementById('a-tab-in'), tabUp=document.getElementById('a-tab-up');
+  const formIn=document.getElementById('af-in'), formUp=document.getElementById('af-up'), formFp=document.getElementById('af-forgot'), tabRow=document.getElementById('auth-tab-row');
+  [formIn,formUp,formFp].forEach(f=>{if(f){f.classList.remove('active');f.style.display='none';}});
+  if(tab==='in'){ if(tabRow) tabRow.style.display='flex'; slider.style.transform='translateX(0)'; tabIn.classList.add('active'); tabUp.classList.remove('active'); formIn.classList.add('active'); formIn.style.display='flex'; document.getElementById('s-err').style.display='none'; }
+  else if(tab==='up'){ if(tabRow) tabRow.style.display='flex'; slider.style.transform='translateX(calc(100%))'; tabUp.classList.add('active'); tabIn.classList.remove('active'); formUp.classList.add('active'); formUp.style.display='flex'; document.getElementById('r-err').style.display='none'; }
+  else if(tab==='forgot'){ if(tabRow) tabRow.style.display='none'; formFp.classList.add('active'); formFp.style.display='flex'; document.getElementById('fp-err').style.display='none'; document.getElementById('fp-success').style.display='none'; document.getElementById('fp-email').value=''; }
+}
+
+function togglePw(inputId,btn){ const inp=document.getElementById(inputId); if(!inp) return; const h=inp.type==='password'; inp.type=h?'text':'password'; btn.innerHTML=h?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`; }
+function checkPwStrength(pw){ const bars=[document.getElementById('psb1'),document.getElementById('psb2'),document.getElementById('psb3'),document.getElementById('psb4')], lbl=document.getElementById('pw-strength-lbl'); bars.forEach(b=>{if(b) b.className='ps-bar';}); if(!pw){if(lbl) lbl.textContent='';return;} let score=0; if(pw.length>=6)score++; if(pw.length>=10)score++; if(/[A-Z]/.test(pw)&&/[0-9]/.test(pw))score++; if(/[^A-Za-z0-9]/.test(pw))score++; const labels=['','Weak','Fair','Good','Strong'],cls=['','weak','fair','good','strong'],colors=['','#EF4444','#F59E0B','#22C55E','#06B6D4']; for(let i=0;i<score;i++){if(bars[i]) bars[i].className='ps-bar '+cls[score];} if(lbl){lbl.textContent=labels[score];lbl.style.color=colors[score];} }
+function checkPwMatch(){ const p=document.getElementById('r-pass')?.value||'',c=document.getElementById('r-confirm')?.value||'',msg=document.getElementById('pw-match-msg'); if(!msg||!c) return; if(p===c){msg.textContent='✅ Passwords match';msg.style.color='var(--health)';msg.style.display='block';}else{msg.textContent='❌ Passwords do not match';msg.style.color='var(--danger)';msg.style.display='block';} }
+
+async function doSignIn(){
+  const email=document.getElementById('s-email').value.trim(),pass=document.getElementById('s-pass').value;
+  const errEl=document.getElementById('s-err'),btn=document.getElementById('s-btn'); errEl.style.display='none';
+  if(!email||!pass){errEl.textContent='Please fill in all fields.';errEl.style.display='block';return;}
+  btn.innerHTML='<span class="spinner"></span> Signing in…';btn.disabled=true;
+  try{ await signInWithEmailAndPassword(auth,email,pass); closeAuth(); showToast('👋 Welcome back!'); }
+  catch(e){errEl.textContent=authError(e.code);errEl.style.display='block';}
+  btn.innerHTML='Sign In';btn.disabled=false;
+}
+
+async function doSignUp(){
+  const fname=(document.getElementById('r-fname')?.value||'').trim(),lname=(document.getElementById('r-lname')?.value||'').trim();
+  const email=document.getElementById('r-email').value.trim(),phone=(document.getElementById('r-phone')?.value||'').trim();
+  const pass=document.getElementById('r-pass').value,confirm=document.getElementById('r-confirm').value;
+  const errEl=document.getElementById('r-err'),btn=document.getElementById('r-btn'); errEl.style.display='none';
+  if(!fname||!email||!pass){errEl.textContent='Name, email and password are required.';errEl.style.display='block';return;}
+  if(pass.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  if(pass!==confirm){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
+  btn.innerHTML='<span class="spinner"></span> Creating…';btn.disabled=true;
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,pass);
+    const displayName=(fname+' '+lname).trim();
+    await updateProfile(cred.user,{displayName});
+    const profData={firstName:fname,lastName:lname,phone,displayName,createdAt:Date.now()};
+    // Write profile to Firebase (real-time)
+    await set(ref(db,`users/${cred.user.uid}/profile`),profData);
+    DataStore.DB.profile=profData; closeAuth(); showToast(`🎉 Welcome, ${fname}!`);
+  }catch(e){errEl.textContent=authError(e.code);errEl.style.display='block';}
+  btn.innerHTML='Create Account';btn.disabled=false;
+}
+
+async function doForgotPw(){
+  const email=document.getElementById('fp-email').value.trim(),errEl=document.getElementById('fp-err'),btn=document.getElementById('fp-btn');
+  errEl.style.display='none';document.getElementById('fp-success').style.display='none';
+  if(!email){errEl.textContent='Please enter your email.';errEl.style.display='block';return;}
+  btn.innerHTML='<span class="spinner"></span> Sending…';btn.disabled=true;
+  try{ await sendPasswordResetEmail(auth,email); document.getElementById('fp-success').style.display='block'; document.getElementById('fp-email').value=''; showToast('📧 Reset email sent!'); }
+  catch(e){errEl.textContent=authError(e.code);errEl.style.display='block';}
+  btn.innerHTML='Send Reset Link';btn.disabled=false;
+}
+
+async function doSignOut(){ await signOut(auth); closeAuth(); showToast('Signed out. See you tomorrow! 💪'); }
+
+function openEditProfile(){ const p=DataStore.DB.profile; setVal('ep-fname',p.firstName||''); setVal('ep-lname',p.lastName||''); setVal('ep-phone',p.phone||''); document.getElementById('ep-err').style.display='none'; document.getElementById('edit-profile-modal').classList.add('open'); }
+function closeEditProfile(){ document.getElementById('edit-profile-modal').classList.remove('open'); }
+async function saveProfile(){
+  const fname=document.getElementById('ep-fname').value.trim(),lname=document.getElementById('ep-lname').value.trim();
+  const phone=document.getElementById('ep-phone').value.trim(),errEl=document.getElementById('ep-err');
+  if(!fname){errEl.textContent='First name is required.';errEl.style.display='block';return;}
+  const displayName=(fname+' '+lname).trim();
+  if(auth.currentUser) await updateProfile(auth.currentUser,{displayName});
+  const profData={...DataStore.DB.profile,firstName:fname,lastName:lname,phone,displayName};
+  DataStore.DB.profile=profData;
+  FB.write('profile', profData); // real-time
+  const av=document.getElementById('u-av'); if(av) av.textContent=fname[0].toUpperCase();
+  const lb=document.getElementById('u-lbl'); if(lb) lb.textContent=fname;
+  const siAv=document.getElementById('si-avatar'); if(siAv) siAv.textContent=fname[0].toUpperCase();
+  const siNm=document.getElementById('si-name'); if(siNm) siNm.textContent=displayName;
+  const siPh=document.getElementById('si-phone'); if(siPh) siPh.textContent=phone;
+  closeEditProfile(); showToast('✅ Profile updated!');
+}
+
+function authError(code){ const m={'auth/user-not-found':'No account with this email.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already registered.','auth/invalid-email':'Invalid email address.','auth/weak-password':'Password too short (min 6).','auth/invalid-credential':'Invalid email or password.','auth/too-many-requests':'Too many attempts. Try later.','auth/missing-email':'Please enter your email.'}; return m[code]||'Error: '+code; }
+
+/* ── FAB ── */
+function fabClick(){ const pm={dashboard:'general',gym:'gym',work:'work',study:'study',health:'health',business:'business',mindset:'mindset'}; if(currentPage==='habits'){openHabitModal();return;} if(currentPage==='goals'){openGoalModal();return;} openAddModal(pm[currentPage]||'general'); }
+
+/* ── Toast ── */
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+
+/* ── Helpers ── */
+function setText(id,val){ const el=document.getElementById(id); if(el) el.textContent=val; }
+function esc(s){ const d=document.createElement('div'); d.appendChild(document.createTextNode(s||'')); return d.innerHTML; }
+function fmtTime(secs){ const s=Math.abs(secs); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+/* ── Keyboard shortcuts ── */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeAddModal(); closeGoalModal(); closeHabitModal(); closeAuth(); closeThemePanel(); }
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){ e.preventDefault(); fabClick(); }
+  if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ const am=document.getElementById('add-modal'); if(am?.classList.contains('open')) submitTask(); }
+});
+
+/* ════════════════════════════════════════════════════════
+   ROUTINE EDITOR
+   ════════════════════════════════════════════════════════ */
+let editingRoutineId=null, modalSteps=[];
+const TEMPLATES={
+  morning:{name:'Morning Power Routine',color:'#FF6B47',time:'05:30',duration:90,schedule:'daily',steps:[{text:'Wake up — no snooze',dur:1},{text:'Cold shower',dur:5},{text:'Hydrate (500ml water)',dur:2},{text:'Meditate / breathing',dur:10},{text:'Journaling — 3 gratitudes',dur:10},{text:'Exercise / stretching',dur:30},{text:'Healthy breakfast',dur:15},{text:'Review daily goals',dur:5}]},
+  work:{name:'Deep Work Block',color:'#4A9EFF',time:'09:00',duration:180,schedule:'daily',steps:[{text:'Close all distractions',dur:3},{text:'Review top 3 priorities',dur:5},{text:'Pomodoro #1 — deep focus',dur:25},{text:'5 min break — stretch',dur:5},{text:'Pomodoro #2 — deep focus',dur:25},{text:'Review progress',dur:5}]},
+  evening:{name:'Night Wind-Down',color:'#6366F1',time:'21:30',duration:60,schedule:'daily',steps:[{text:'Stop screens 1hr before sleep',dur:5},{text:'Tidy workspace for tomorrow',dur:10},{text:'Read physical book',dur:20},{text:'Evening journal reflection',dur:10},{text:'Gratitude & tomorrow intention',dur:5},{text:'Lights out — 10:30pm',dur:1}]}
+};
+
+function openNewRoutineModal(){
+  editingRoutineId=null; modalSteps=[];
+  setVal('rm-name',''); document.getElementById('rm-dur').value='60'; document.getElementById('rm-time').value='06:00'; document.getElementById('rm-color').value='#FF6B47';
+  UIController.injectRoutineSchedule();
+  if(document.getElementById('rm-schedule')) document.getElementById('rm-schedule').value='daily';
+  document.querySelectorAll('#rm-days-wrap input').forEach(cb=>cb.checked=false);
+  const rdw=document.getElementById('rm-days-wrap'); if(rdw) rdw.style.display='none';
+  setText('routine-modal-title','New Routine');
+  renderModalSteps(); document.getElementById('routine-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('rm-name').focus(),150);
+}
+function closeRoutineModal(){ document.getElementById('routine-modal').classList.remove('open'); }
+function addModalStep(){ const text=prompt('Step description:'); if(!text?.trim()) return; const dur=parseInt(prompt('Duration in minutes:')||'5')||5; modalSteps.push({text:text.trim(),dur}); renderModalSteps(); }
+function renderModalSteps(){
+  const el=document.getElementById('rm-steps-list'); if(!el) return; el.innerHTML='';
+  modalSteps.forEach((s,i)=>{ const d=document.createElement('div'); d.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)'; d.innerHTML=`<span style="width:20px;height:20px;border-radius:50%;background:var(--card);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t2);flex-shrink:0">${i+1}</span><span style="flex:1;font-size:13px;color:var(--text)">${esc(s.text)}</span><span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;flex-shrink:0">${s.dur}m</span><button onclick="modalSteps.splice(${i},1);renderModalSteps()" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--t3)'">✕</button>`; el.appendChild(d); });
+}
+
+function saveRoutine(){
+  const name=document.getElementById('rm-name').value.trim();
+  if(!name){ document.getElementById('rm-name').style.borderColor='var(--danger)'; setTimeout(()=>document.getElementById('rm-name').style.borderColor='',1200); return; }
+  const color=document.getElementById('rm-color').value, time=document.getElementById('rm-time').value;
+  const duration=parseInt(document.getElementById('rm-dur').value)||60;
+  const schedule=document.getElementById('rm-schedule')?.value||'daily';
+  let days=undefined;
+  if(schedule==='weekly'){ days=[]; document.querySelectorAll('#rm-days-wrap input:checked').forEach(cb=>days.push(+cb.dataset.rday)); if(!days.length) days=[1,2,3,4,5]; }
+  const id=editingRoutineId||'r'+Date.now();
+  const routine={id,name,color,time,duration,steps:modalSteps,schedule,active:true,createdAt:Date.now()};
+  if(days!==undefined) routine.days=days;
+  DataStore.DB.routines[id]=routine;
+  FB.write(`routines/${id}`, routine); // real-time
+  closeRoutineModal(); renderRoutines(); showToast(`✅ "${name}" saved!`);
+}
+
+function addTemplateRoutine(key){
+  const tmpl=TEMPLATES[key]; if(!tmpl) return;
+  const id='r'+Date.now(), routine={id,...tmpl,createdAt:Date.now(),active:true};
+  DataStore.DB.routines[id]=routine;
+  FB.write(`routines/${id}`, routine); // real-time
+  renderRoutines(); showToast(`✅ "${tmpl.name}" added!`);
+  navTo('routines',document.querySelector('[data-page="routines"]'));
+}
+
+function renderRoutines(){
+  const el=document.getElementById('routine-list'); if(!el) return; el.innerHTML='';
+  const today=DataStore.todayStr();
+  const routines=Object.values(RoutineEngine.getRoutinesForDate(today)).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  if(!routines.length){ el.innerHTML='<div class="empty-state" style="padding:32px">No routines for today — add one or use a template ↑</div>'; renderTodaySchedule([]); return; }
+  routines.forEach(r=>el.appendChild(makeRoutineBlock(r))); renderTodaySchedule(routines);
+}
+
+function makeRoutineBlock(r){
+  const div=document.createElement('div'); div.className='routine-block'; div.dataset.id=r.id;
+  const today=DataStore.todayStr(), done=RoutineEngine.isRoutineDone(r.id,today);
+  const steps=r.steps||[], schedLabel={daily:'Daily',weekly:'Weekly',forever:'Always'}[r.schedule||'daily']||'Daily';
+  div.innerHTML=`
+    <div class="rb-header" onclick="toggleRoutineBody('${r.id}')">
+      <div class="rb-dot" style="background:${r.color};opacity:${done?.5:1}"></div>
+      <div class="rb-title" style="${done?'text-decoration:line-through;opacity:.55':''}">${esc(r.name)}</div>
+      <div class="rb-time">${r.time||'—'} · ${r.duration}m · <span style="font-size:10px;color:var(--t3)">${schedLabel}</span></div>
+      <div style="display:flex;gap:6px;margin-left:8px;align-items:center">
+        <div class="t-cb ${done?'chk':''}" style="width:17px;height:17px;border-radius:4px;border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;${done?'background:'+r.color+';border-color:transparent':''}" onclick="event.stopPropagation();_toggleRoutineDone('${r.id}')" title="${done?'Mark incomplete':'Mark complete'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:9px;height:9px;color:#fff;opacity:${done?1:0}"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <button onclick="event.stopPropagation();editRoutine('${r.id}')" style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;color:var(--t2);cursor:pointer;font-size:11px;padding:3px 7px;font-family:'DM Sans',sans-serif" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--t2)'">✏️</button>
+        <button onclick="event.stopPropagation();deleteRoutine('${r.id}')" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:6px;color:var(--danger);cursor:pointer;font-size:11px;padding:3px 7px;font-family:'DM Sans',sans-serif">✕</button>
+      </div>
+      <div class="rb-chevron" id="chv-${r.id}">▸</div>
+    </div>
+    <div class="rb-body" id="body-${r.id}">
+      ${steps.length?steps.map((s,i)=>`<div class="rb-step"><div class="rb-step-num">${i+1}</div><div class="rb-step-txt">${esc(s.text)}</div><div class="rb-step-dur">${s.dur}m</div><button class="rb-step-del" onclick="deleteRoutineStep('${r.id}',${i})">✕</button></div>`).join(''):'<div style="font-size:12.5px;color:var(--t3);padding:12px 0">No steps yet</div>'}
+      <button class="rb-add-step" onclick="addStepToRoutine('${r.id}')">+ Add Step</button>
+    </div>`;
+  return div;
+}
+
+function _toggleRoutineDone(id){
+  const today=DataStore.todayStr(), done=RoutineEngine.isRoutineDone(id,today);
+  // RoutineEngine.setRoutineDone already calls FB.write internally
+  RoutineEngine.setRoutineDone(id,!done,today);
+  renderRoutines(); showToast(!done?'✅ Routine completed!':'Routine marked incomplete');
+}
+window._toggleRoutineDone=_toggleRoutineDone;
+
+function toggleRoutineBody(id){ const body=document.getElementById('body-'+id),chv=document.getElementById('chv-'+id); if(!body) return; const open=body.classList.toggle('open'); if(chv) chv.textContent=open?'▾':'▸'; }
+
+function editRoutine(id){
+  const r=DataStore.DB.routines[id]; if(!r) return;
+  editingRoutineId=id; modalSteps=[...(r.steps||[])];
+  setVal('rm-name',r.name||''); document.getElementById('rm-time').value=r.time||'06:00';
+  document.getElementById('rm-dur').value=r.duration||60; document.getElementById('rm-color').value=r.color||'#FF6B47';
+  UIController.injectRoutineSchedule();
+  if(document.getElementById('rm-schedule')) document.getElementById('rm-schedule').value=r.schedule||'daily';
+  setText('routine-modal-title','Edit Routine');
+  renderModalSteps(); document.getElementById('routine-modal').classList.add('open');
+}
+window.editRoutine=editRoutine;
+
+async function deleteRoutine(id){
+  const r=DataStore.DB.routines[id]; if(!r||!confirm(`Delete "${r.name}"?`)) return;
+  delete DataStore.DB.routines[id];
+  await FB.del(`routines/${id}`); // real-time delete
+  renderRoutines(); showToast('Routine deleted');
+}
+
+async function addStepToRoutine(rid){
+  const text=prompt('New step:'); if(!text?.trim()) return;
+  const dur=parseInt(prompt('Duration (minutes):')||'5')||5;
+  const r=DataStore.DB.routines[rid]; if(!r) return;
+  if(!r.steps) r.steps=[];
+  r.steps.push({text:text.trim(),dur});
+  FB.write(`routines/${rid}`, r); // real-time full routine update
+  renderRoutines();
+}
+
+async function deleteRoutineStep(rid,idx){
+  const r=DataStore.DB.routines[rid]; if(!r?.steps) return;
+  r.steps.splice(idx,1);
+  FB.write(`routines/${rid}`, r); // real-time
+  renderRoutines();
+}
+
+function renderTodaySchedule(routines){
+  const el=document.getElementById('today-schedule'); if(!el) return; el.innerHTML='';
+  if(!routines.length){el.innerHTML='<div class="empty-state">Add routines to see your daily timeline</div>';return;}
+  const today=DataStore.todayStr();
+  routines.slice().sort((a,b)=>(a.time||'00:00').localeCompare(b.time||'00:00')).forEach(r=>{
+    const done=RoutineEngine.isRoutineDone(r.id,today);
+    const d=document.createElement('div'); d.style.cssText='display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)';
+    const parts=(r.time||'00:00').split(':'), hh=parseInt(parts[0])||0, mm=parseInt(parts[1])||0;
+    const end=new Date(0,0,0,hh,mm+r.duration);
+    const endStr=String(end.getHours()).padStart(2,'0')+':'+String(end.getMinutes()).padStart(2,'0');
+    d.innerHTML=`<div style="width:3px;height:40px;border-radius:2px;background:${r.color};flex-shrink:0;margin-top:2px;opacity:${done?.4:1}"></div>
+      <div style="flex:1"><div style="font-size:13.5px;font-weight:500;color:var(--text);${done?'text-decoration:line-through;opacity:.5':''}">${esc(r.name)}</div>
+      <div style="font-size:11.5px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:2px">${r.time} → ${endStr} · ${r.duration}m</div></div>
+      <div style="font-size:11px;color:${done?'var(--health)':'var(--t3)'};font-weight:600">${done?'✓ Done':'—'}</div>`;
+    el.appendChild(d);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   MOBILE NAVIGATION
+   ════════════════════════════════════════════════════════ */
+const PAGE_TITLES={dashboard:'Dashboard',gym:'Gym & Fitness',work:'Work & Career',study:'Study & Learning',health:'Health & Nutrition',business:'Business & Money',mindset:'Mindset & Growth',habits:'Habit Tracker',goals:'Goals',routines:'Routine Editor'};
+function mobileNavTo(page,btn){ closeMobileMore(); navTo(page,document.querySelector(`[data-page="${page}"].nav-btn`)); document.querySelectorAll('.mn-btn[data-page]').forEach(b=>b.classList.remove('active')); if(btn&&btn.dataset.page) btn.classList.add('active'); document.querySelectorAll('.mm-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page)); const ttl=document.getElementById('mtb-title'); if(ttl) ttl.textContent=PAGE_TITLES[page]||'LifeOS'; window.scrollTo({top:0,behavior:'smooth'}); }
+function toggleMobileMore(btn){ const menu=document.getElementById('mobile-more-menu'),ov=document.getElementById('more-overlay'); const isOpen=menu.classList.toggle('open'); if(ov) ov.style.display=isOpen?'block':'none'; if(btn) btn.classList.toggle('active',isOpen); }
+function closeMobileMore(){ const menu=document.getElementById('mobile-more-menu'),ov=document.getElementById('more-overlay'),btn=document.getElementById('mn-more'); if(menu) menu.classList.remove('open'); if(ov) ov.style.display='none'; if(btn) btn.classList.remove('active'); }
+window.mobileNavTo=mobileNavTo; window.toggleMobileMore=toggleMobileMore; window.closeMobileMore=closeMobileMore;
+
+const _origUpdateAuthUI2=updateAuthUI;
+window.updateAuthUI=function(user){ _origUpdateAuthUI2(user); const mu=document.getElementById('mtb-user'); if(mu){ if(user){ const nm=user.displayName||user.email.split('@')[0]; mu.textContent=nm[0].toUpperCase(); }else{ mu.textContent='?'; } } };
+
+document.querySelectorAll('.overlay').forEach(ov=>{ ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('open'); }); });
+
+/* ════════════════════════════════════════════════════════
+   THEME SYSTEM
+   ════════════════════════════════════════════════════════ */
+window.applyTheme=applyTheme; window.toggleThemePanel=toggleThemePanel;
+const THEME_DEFAULTS={dark:{bg:'#0A0A0F',accent:'#D4A843'},obsidian:{bg:'#000000',accent:'#C8A84B'},midnight:{bg:'#0D0F1A',accent:'#7B8FFF'},forest:{bg:'#0A0F0D',accent:'#4DBF6A'},ember:{bg:'#0F0A08',accent:'#E85A30'},rose:{bg:'#0F080C',accent:'#E8509A'},arctic:{bg:'#F0F4F8',accent:'#2563EB'},slate:{bg:'#0C0E12',accent:'#94A3B8'}};
+let currentTheme='dark';
+function applyTheme(name,btn){ if(name==='dark') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',name); currentTheme=name; document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active',s.dataset.theme===name)); localStorage.setItem('lifeos_theme',name); FB.write('settings/theme',name); showToast('🎨 Theme applied!'); closeThemePanel(); typeof closeMobileMore==='function'&&closeMobileMore(); }
+function toggleThemePanel(){ closeMobileMore&&closeMobileMore(); const panel=document.getElementById('theme-panel'),isMobile=window.innerWidth<=600; if(isMobile){panel.style.left='0';panel.style.right='0';panel.style.bottom='62px';panel.style.width='auto';panel.style.borderRadius='20px 20px 0 0';}else{panel.style.left='';panel.style.right='';panel.style.bottom='';panel.style.width='';panel.style.borderRadius='';} const willOpen=!panel.classList.contains('open'); panel.classList.toggle('open'); let bd=document.getElementById('theme-backdrop'); if(!bd){bd=document.createElement('div');bd.id='theme-backdrop';bd.style.cssText='position:fixed;inset:0;z-index:499;background:rgba(0,0,0,.55);display:none';bd.addEventListener('click',closeThemePanel);document.body.appendChild(bd);} bd.style.display=(willOpen&&isMobile)?'block':'none'; }
+function closeThemePanel(){ document.getElementById('theme-panel').classList.remove('open'); const bd=document.getElementById('theme-backdrop'); if(bd) bd.style.display='none'; }
+function loadTheme(name){ if(!name||!THEME_DEFAULTS[name]) name='dark'; if(name==='dark') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',name); currentTheme=name; document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active',s.dataset.theme===name)); }
+(function(){ const saved=localStorage.getItem('lifeos_theme'); if(saved) loadTheme(saved); })();
+document.addEventListener('click',e=>{ if(window.innerWidth>600){ const panel=document.getElementById('theme-panel'),sidebar=document.getElementById('sidebar'); if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&!(sidebar&&sidebar.contains(e.target))) closeThemePanel(); } });
+
+</script>
+</body>
+</html>
